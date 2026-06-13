@@ -205,14 +205,7 @@ Picpus-qui-ne-pète-pas </textarea>
             <button class="button danger full" onclick="clearPlayers()">Effacer la liste des joueurs</button>
             <button class="button outline full" id="clearSaveBtn" onclick="clearSavedData()">Effacer la sauvegarde</button>
           </div>
-          <div class="buttons-2">
-            <button class="button violet full" id="exportSaveBtn" onclick="exportBackup()">Exporter backup JSON</button>
-            <div></div>
-          </div>
-          <div class="buttons-2">
-            <button class="button" onclick="exportPDF()">Export PDF</button>
-            <button class="button" onclick="exportCSV()">Export CSV</button>
-          </div>
+
 
           <div id="messageBox" class="message" style="display:none"></div>
           <div id="autosaveBanner" class="autosave-banner" style="display:none"></div>
@@ -285,7 +278,14 @@ Picpus-qui-ne-pète-pas </textarea>
         <div id="tab-historique" class="tab-panel"><div class="history-grid" id="historyGrid"></div></div>
       </div>
     </section>
-
+          <div class="buttons-2">
+            <button class="button violet full" id="exportSaveBtn" onclick="exportBackup()">Exporter backup JSON</button>
+            <div></div>
+          </div>
+          <div class="buttons-2">
+            <button class="button" onclick="exportPDF()">Export PDF</button>
+            <button class="button" onclick="exportCSV()">Export CSV</button>
+          </div>
     <section class="footer-note"><strong>Note :</strong> la sauvegarde automatique se fait dans le navigateur (localStorage). Pour Safari/iPhone et Android, utilisez cette appli via une URL (pas en fichier local).</section>
   </div>
 
