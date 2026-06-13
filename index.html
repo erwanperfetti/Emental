@@ -200,11 +200,7 @@ Picpus</textarea>
             <button class="button" id="startBtn" onclick="startTournament()">Démarrer le tournoi</button>
             <button class="button secondary" id="shuffleBtn" onclick="shuffleInitialOrder()">Mélanger l'ordre initial</button>
           </div>
-          <div class="buttons-3">
-            <button class="button outline full" id="resetBtn" onclick="resetTournament()">Réinitialiser</button>
-            <button class="button danger full" onclick="clearPlayers()">Effacer la liste des joueurs</button>
-            <button class="button outline full" id="clearSaveBtn" onclick="clearSavedData()">Effacer la sauvegarde</button>
-          </div>
+
 
 
           <div id="messageBox" class="message" style="display:none"></div>
@@ -278,11 +274,18 @@ Picpus</textarea>
         <div id="tab-historique" class="tab-panel"><div class="history-grid" id="historyGrid"></div></div>
       </div>
     </section>
-          <div class="buttons-2">
+              <div class="buttons-3">
+            <button class="button outline full" id="resetBtn" onclick="resetTournament()">Réinitialiser</button>
+            <button class="button danger full" onclick="clearPlayers()">Effacer la liste des joueurs</button>
+            <button class="button outline full" id="clearSaveBtn" onclick="clearSavedData()">Effacer la sauvegarde</button>
+          </div>      
+    
+    <div class="buttons-2">
             <button class="button violet full" id="exportSaveBtn" onclick="exportBackup()">Exporter backup JSON</button>
             <div></div>
           </div>
           <div class="buttons-2">
+            
             <button class="button" onclick="exportPDF()">Export PDF</button>
             <button class="button" onclick="exportCSV()">Export CSV</button>
           </div>
