@@ -180,22 +180,19 @@
       <section class="card">
         <div class="card-header">
           <h1 class="card-title">♟️ Tournoi Suisse Échecs</h1>
-          <p class="card-description">Version mobile. Suisse uniquement. Si pas content, se plaindre à Erwan Perfetti.</p>
+          <p class="card-description">Version mobile, qui fait tout. Si pas content, je m'en fous. Erwan Perfetti.</p>
         </div>
         <div class="card-body">
           <label class="label" for="playersInput">Liste des joueurs (un nom par ligne)</label>
           <textarea id="playersInput">Sullivan
 Adeline
 Erwan
-Julien Song
-Cacahuete
-Dina
-Lucie
+Jean-Louis
+Claire
 Doggy
-LesLapines
-Sulliette
 Picpus
-</textarea>
+Sulliette
+LesLapines</textarea>
 
           <div class="buttons-2">
             <button class="button" id="startBtn" onclick="startTournament()">Démarrer le tournoi</button>
@@ -203,8 +200,12 @@ Picpus
           </div>
           <div class="buttons-3">
             <button class="button outline full" id="resetBtn" onclick="resetTournament()">Réinitialiser</button>
+            <button class="button danger full" onclick="clearPlayers()">Effacer la liste des joueurs</button>
             <button class="button outline full" id="clearSaveBtn" onclick="clearSavedData()">Effacer la sauvegarde</button>
+          </div>
+          <div class="buttons-2">
             <button class="button violet full" id="exportSaveBtn" onclick="exportBackup()">Exporter backup JSON</button>
+            <div></div>
           </div>
           <div class="buttons-2">
             <button class="button" onclick="exportPDF()">Export PDF</button>
@@ -293,7 +294,7 @@ Picpus
       { value: '0.5-0.5', label: '½ - ½' }
     ];
     var palette = ['#2563eb', '#16a34a', '#dc2626', '#7c3aed', '#ea580c', '#0891b2', '#db2777', '#65a30d', '#0f766e', '#9333ea', '#1d4ed8', '#be123c'];
-    var STORAGE_KEY = 'tournoi_suisse_html_autosave_v4';
+    var STORAGE_KEY = 'tournoi_suisse_html_autosave_v5';
 
     var state = {
       players: [], pairings: [], started: false, currentRound: 0, totalRounds: 0,
@@ -561,16 +562,25 @@ Picpus
       setMessage('Classement CSV exporté.');
     }
 
+    function clearPlayers() {
+      if (!confirm('Effacer toute la liste des joueurs ?')) return;
+      el.playersInput.value = '';
+      state = {
+        players: [], pairings: [], started: false, currentRound: 0, totalRounds: 0,
+        warnings: [], message: '', lastSavedAt: state.lastSavedAt || null, activeTab: state.activeTab || 'classement', roundSnapshots: []
+      };
+      setMessage('Liste des joueurs effacée.');
+      saveToLocalStorage();
+      renderAll();
+    }
+
     function updateInfoCards() {
       if (!state.started) { el.infoGrid.style.display = 'none'; return; }
       el.infoGrid.style.display = 'grid';
       var theoreticalPlayers = Math.pow(2, state.totalRounds);
       var leadersStillPossible = Math.max(1, Math.ceil((state.players.length || 0) / Math.pow(2, Math.max(0, state.currentRound))));
       el.roundStat.textContent = Math.min(state.currentRound, state.totalRounds) + ' / ' + state.totalRounds;
-      el.sizeStat.textContent =
-  '~ ' + theoreticalPlayers + ' joueurs (calibrage) / ' +
-  state.players.length + ' joueurs réels';
-
+      el.sizeStat.textContent = '~ ' + theoreticalPlayers + ' joueurs (calibrage) / ' + state.players.length + ' joueurs réels';
       el.projectionStat.textContent = '≈ ' + leadersStillPossible + ' joueur(x) encore potentiellement invaincu(s) • ' + state.players.length + ' inscrit(s)';
     }
     function renderWarnings() {
