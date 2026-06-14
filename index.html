@@ -315,7 +315,17 @@ Erwan</textarea>
             <div class="stat amber"><h4>Projection</h4><p id="projectionStat">—</p></div>
           </div>
 
-          
+          <div class="correct-box" id="correctionBox" style="display:none;">
+            <h3>Corriger une ronde</h3>
+            <div class="correct-grid">
+              <div>
+                <label class="label" for="roundCorrectionSelect">Reprendre à la ronde</label>
+                <select id="roundCorrectionSelect"></select>
+              </div>
+              <button class="button danger" onclick="restoreRoundForCorrection()">Corriger cette ronde</button>
+            </div>
+            <div class="small-note">Cette action annule les rondes suivantes. La ronde choisie est restaurée avec ses appariements et ses résultats, que vous pourrez modifier avant de revalider.</div>
+          </div>
         </div>
       </section>
 
@@ -364,19 +374,6 @@ Erwan</textarea>
         <div id="tab-historique" class="tab-panel"><div class="history-grid" id="historyGrid"></div></div>
       </div>
     </section>
-
-    </section>
-<div class="correct-box" id="correctionBox" style="display:none;">
-            <h3>Corriger une ronde</h3>
-            <div class="correct-grid">
-              <div>
-                <label class="label" for="roundCorrectionSelect">Reprendre à la ronde</label>
-                <select id="roundCorrectionSelect"></select>
-              </div>
-              <button class="button danger" onclick="restoreRoundForCorrection()">Corriger cette ronde</button>
-            </div>
-            <div class="small-note">Cette action annule les rondes suivantes. La ronde choisie est restaurée avec ses appariements et ses résultats, que vous pourrez modifier avant de revalider.</div>
-          </div>
 
     <section class="card">
       <div class="card-header">
