@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
-  <title>Tournoi Suisse Échecs - V9</title>
+  <title>Tournoi Suisse Échecs - V2.1</title>
   <style>
     :root {
       --bg: #f4f7fb;
@@ -307,7 +307,7 @@ Erwan</textarea>
       { value: '0.5-0.5', label: '½ - ½' }
     ];
     var palette = ['#2563eb', '#16a34a', '#dc2626', '#7c3aed', '#ea580c', '#0891b2', '#db2777', '#65a30d', '#0f766e', '#9333ea', '#1d4ed8', '#be123c'];
-    var STORAGE_KEY = 'tournoi_suisse_html_autosave_v81c';
+    var STORAGE_KEY = 'tournoi_suisse_html_autosave_v81e';
 
     var state = {
       players: [], pairings: [], started: false, currentRound: 0, totalRounds: 0,
@@ -325,6 +325,7 @@ Erwan</textarea>
       el.warnings = document.getElementById('warnings');
       el.pairingsArea = document.getElementById('pairingsArea');
       el.pairingsControls = document.getElementById('pairingsControls');
+      el.validateRoundBtn = document.getElementById('validateRoundBtn');
       el.rankingTableBody = document.getElementById('rankingTableBody');
       el.topNInput = document.getElementById('topNInput');
       el.scoresCanvas = document.getElementById('scoresCanvas');
@@ -372,6 +373,27 @@ Erwan</textarea>
       var badgeText = count > 0 ? count + ' joueur' + (count > 1 ? 's' : '') + (count < 4 ? ' ⚠️' : '') : '0 joueur';
       el.startBtn.innerHTML = '<span class="start-btn-content">▶️ Démarrer le tournoi <span class="count-badge ' + badgeClass + '">' + badgeText + '</span></span>';
       el.startBtn.disabled = count < 4;
+    }
+
+    function updateValidateRoundButton() {
+      if (!state.started) {
+        el.pairingsControls.style.display = 'none';
+        return;
+      }
+      el.pairingsControls.style.display = 'block';
+      if (!state.pairings || state.pairings.length === 0) {
+        el.validateRoundBtn.textContent = '🏁 Tournoi terminé';
+        el.validateRoundBtn.disabled = true;
+        return;
+      }
+      var allResultsEntered = state.pairings.every(function (p) { return p.type === 'bye' || !!p.result; });
+      var isLastRound = state.currentRound >= state.totalRounds;
+      if (isLastRound) {
+        el.validateRoundBtn.textContent = allResultsEntered ? '🏁 Valider la dernière ronde et terminer le tournoi' : '⏳ Dernière ronde : scores manquants';
+      } else {
+        el.validateRoundBtn.textContent = allResultsEntered ? '✅ Valider la ronde et générer la suivante' : '⏳ Renseignez tous les scores';
+      }
+      el.validateRoundBtn.disabled = !allResultsEntered;
     }
 
     function colorCounts(player) {
@@ -642,13 +664,13 @@ Erwan</textarea>
       if (!state.started) {
         el.pairingsArea.className = 'empty';
         el.pairingsArea.textContent = 'Démarrez le tournoi pour générer la première ronde.';
-        el.pairingsControls.style.display = 'none';
+        updateValidateRoundButton();
         return;
       }
       if (state.pairings.length === 0) {
         el.pairingsArea.className = 'empty';
         el.pairingsArea.textContent = 'Le tournoi est terminé.';
-        el.pairingsControls.style.display = 'none';
+        updateValidateRoundButton();
         return;
       }
       var sortedPairings = state.pairings.slice().sort(function (a, b) {
@@ -678,13 +700,26 @@ Erwan</textarea>
       });
       el.pairingsArea.className = 'pairings-list';
       el.pairingsArea.innerHTML = html;
-      el.pairingsControls.style.display = 'block';
       Array.prototype.slice.call(el.pairingsArea.querySelectorAll('.pairing-select')).forEach(function (select) {
-        select.addEventListener('change', function (e) { var idx = Number(e.target.dataset.pairingIndex); state.pairings[idx].result = e.target.value; saveRoundSnapshot(); saveToLocalStorage(); renderPairings(); });
+        select.addEventListener('change', function (e) {
+          var idx = Number(e.target.dataset.pairingIndex);
+          state.pairings[idx].result = e.target.value;
+          saveRoundSnapshot();
+          saveToLocalStorage();
+          renderPairings();
+        });
       });
       Array.prototype.slice.call(el.pairingsArea.querySelectorAll('.result-btn')).forEach(function (btn) {
-        btn.addEventListener('click', function (e) { var idx = Number(e.currentTarget.dataset.pairingBtn); var value = e.currentTarget.dataset.result; state.pairings[idx].result = value; saveRoundSnapshot(); saveToLocalStorage(); renderPairings(); });
+        btn.addEventListener('click', function (e) {
+          var idx = Number(e.currentTarget.dataset.pairingBtn);
+          var value = e.currentTarget.dataset.result;
+          state.pairings[idx].result = value;
+          saveRoundSnapshot();
+          saveToLocalStorage();
+          renderPairings();
+        });
       });
+      updateValidateRoundButton();
     }
     function renderRanking() {
       if (!state.players.length) { el.rankingTableBody.innerHTML = '<tr><td colspan="7" style="color:#64748b;">Aucun joueur pour le moment.</td></tr>'; return; }
@@ -757,6 +792,7 @@ Erwan</textarea>
       drawChart();
       updateAutosaveBanner();
       updateStartButtonLabel();
+      updateValidateRoundButton();
     }
     function startTournament() {
       var parsed = parsePlayers(el.playersInput.value);
@@ -794,7 +830,7 @@ Erwan</textarea>
     }
     function validateRound() {
       var allResultsEntered = state.pairings.every(function (p) { return p.type === 'bye' || !!p.result; });
-      if (!allResultsEntered) { setMessage('Veuillez renseigner tous les résultats avant de passer à la ronde suivante.'); return; }
+      if (!allResultsEntered) { setMessage('Veuillez renseigner tous les résultats avant de passer à la ronde suivante.'); updateValidateRoundButton(); return; }
       saveRoundSnapshot();
       var updatedPlayers = applyRoundResults(state.players, state.pairings);
       if (state.currentRound >= state.totalRounds) {
