@@ -1658,86 +1658,246 @@ function clearSavedData() {
   updateAutosaveBanner();
 }
 
-  function exportPDF() {
-    var sortedFinal = state.players.slice().sort(comparePlayers);
-    var content = '';
+function exportPDF() {
+  var sortedFinal = state.players.slice().sort(comparePlayers);
+  var exportDate = new Date().toLocaleString('fr-FR');
+  var currentRoundDisplay = state.currentRound || 0;
+  var totalRoundsDisplay = state.totalRounds || 0;
 
-    content += '<h1>Tournoi Suisse — Export complet</h1>';
-    content += '<p><strong>Nombre de joueurs :</strong> ' + sortedFinal.length + '</p>';
-    if (state.totalRounds) content += '<p><strong>Nombre de rondes théoriques :</strong> ' + state.totalRounds + '</p>';
+  function buildRoundsHtml() {
+    var html = '';
 
     if (state.roundSnapshots && state.roundSnapshots.length > 0) {
       state.roundSnapshots.forEach(function (snap) {
-        content += '<h2>Ronde ' + snap.round + '</h2>';
+        html += '<section class="print-section">';
+        html += '<h2>Ronde ' + snap.round + '</h2>';
 
         if (snap.pairings && snap.pairings.length > 0) {
+          html += '<table class="print-table">';
+          html += '<thead><tr><th>Table</th><th>Blanc</th><th>Noir</th><th>Résultat</th></tr></thead><tbody>';
+
           snap.pairings.forEach(function (p) {
             if (p.type === 'bye') {
-              content += '<p><strong>' + escapeHtml(p.playerName) + '</strong> : BYE (+1)</p>';
+              html += '<tr>';
+              html += '<td>BYE</td>';
+              html += '<td colspan="2"><strong>' + escapeHtml(p.playerName) + '</strong></td>';
+              html += '<td>+1</td>';
+              html += '</tr>';
             } else {
-              content += '<p>Table ' + p.table + ' : ' + escapeHtml(p.whiteName) + ' (Blanc) vs ' + escapeHtml(p.blackName) + ' (Noir) → ' + escapeHtml(p.result || 'à jouer') + '</p>';
+              html += '<tr>';
+              html += '<td>' + p.table + '</td>';
+              html += '<td>' + escapeHtml(p.whiteName) + '</td>';
+              html += '<td>' + escapeHtml(p.blackName) + '</td>';
+              html += '<td>' + escapeHtml(formatResult(p.result || 'à jouer')) + '</td>';
+              html += '</tr>';
             }
           });
+
+          html += '</tbody></table>';
         } else {
-          content += '<p>Aucun appariement enregistré pour cette ronde.</p>';
+          html += '<p class="muted">Aucun appariement enregistré pour cette ronde.</p>';
         }
+
+        html += '</section>';
       });
     } else if (state.pairings && state.pairings.length > 0) {
-      content += '<h2>Ronde ' + state.currentRound + '</h2>';
+      html += '<section class="print-section">';
+      html += '<h2>Ronde ' + state.currentRound + '</h2>';
+      html += '<table class="print-table">';
+      html += '<thead><tr><th>Table</th><th>Blanc</th><th>Noir</th><th>Résultat</th></tr></thead><tbody>';
+
       state.pairings.forEach(function (p) {
         if (p.type === 'bye') {
-          content += '<p><strong>' + escapeHtml(p.playerName) + '</strong> : BYE (+1)</p>';
+          html += '<tr>';
+          html += '<td>BYE</td>';
+          html += '<td colspan="2"><strong>' + escapeHtml(p.playerName) + '</strong></td>';
+          html += '<td>+1</td>';
+          html += '</tr>';
         } else {
-          content += '<p>Table ' + p.table + ' : ' + escapeHtml(p.whiteName) + ' (Blanc) vs ' + escapeHtml(p.blackName) + ' (Noir) → ' + escapeHtml(p.result || 'à jouer') + '</p>';
+          html += '<tr>';
+          html += '<td>' + p.table + '</td>';
+          html += '<td>' + escapeHtml(p.whiteName) + '</td>';
+          html += '<td>' + escapeHtml(p.blackName) + '</td>';
+          html += '<td>' + escapeHtml(formatResult(p.result || 'à jouer')) + '</td>';
+          html += '</tr>';
         }
       });
+
+      html += '</tbody></table>';
+      html += '</section>';
     } else {
-      content += '<p>Aucune ronde disponible pour le moment.</p>';
+      html += '<section class="print-section">';
+      html += '<h2>Rondes</h2>';
+      html += '<p class="muted">Aucune ronde disponible pour le moment.</p>';
+      html += '</section>';
     }
 
-    content += '<h2>Classement</h2>';
-
-    if (sortedFinal.length > 0) {
-      content += '<table style="width:100%; border-collapse:collapse; margin-top:12px;">';
-      content += '<thead><tr>' +
-        '<th style="border:1px solid #cbd5e1; padding:8px; text-align:left;">#</th>' +
-        '<th style="border:1px solid #cbd5e1; padding:8px; text-align:left;">Joueur</th>' +
-        '<th style="border:1px solid #cbd5e1; padding:8px; text-align:left;">Score</th>' +
-        '<th style="border:1px solid #cbd5e1; padding:8px; text-align:left;">Buchholz</th>' +
-        '<th style="border:1px solid #cbd5e1; padding:8px; text-align:left;">Blancs</th>' +
-        '<th style="border:1px solid #cbd5e1; padding:8px; text-align:left;">Noirs</th>' +
-        '</tr></thead><tbody>';
-
-      sortedFinal.forEach(function (p, idx) {
-        var counts = colorCounts(p);
-        content += '<tr>' +
-          '<td style="border:1px solid #cbd5e1; padding:8px;">' + (idx + 1) + '</td>' +
-          '<td style="border:1px solid #cbd5e1; padding:8px;">' + escapeHtml(p.name) + '</td>' +
-          '<td style="border:1px solid #cbd5e1; padding:8px;">' + formatScore(p.score) + '</td>' +
-          '<td style="border:1px solid #cbd5e1; padding:8px;">' + Number(p.buchholz || 0).toFixed(1) + '</td>' +
-          '<td style="border:1px solid #cbd5e1; padding:8px;">' + counts.w + '</td>' +
-          '<td style="border:1px solid #cbd5e1; padding:8px;">' + counts.b + '</td>' +
-          '</tr>';
-      });
-
-      content += '</tbody></table>';
-    } else {
-      content += '<p>Aucun classement disponible.</p>';
-    }
-
-    var win = window.open('', '', 'width=1000,height=800');
-    if (!win) {
-      setMessage('Impossible d’ouvrir la fenêtre PDF. Vérifiez le bloqueur de pop-up.');
-      return;
-    }
-
-    win.document.write('<html><head><title>Export PDF complet tournoi</title><meta charset="UTF-8"><style>body{font-family:Arial;padding:24px;color:#0f172a}h1{margin-top:0}h2{margin-top:28px;margin-bottom:10px;border-bottom:1px solid #e2e8f0;padding-bottom:6px}p{font-size:15px;line-height:1.45;margin:6px 0}table{font-size:14px}th{background:#f8fafc}</style></head><body>');
-    win.document.write(content);
-    win.document.write('</body></html>');
-    win.document.close();
-    win.focus();
-    win.print();
+    return html;
   }
+
+  function buildRankingHtml() {
+    var html = '<section class="print-section">';
+    html += '<h2>Classement</h2>';
+
+    if (!sortedFinal.length) {
+      html += '<p class="muted">Aucun classement disponible.</p>';
+      html += '</section>';
+      return html;
+    }
+
+    html += '<table class="print-table">';
+    html += '<thead><tr>';
+    html += '<th>#</th>';
+    html += '<th>Joueur</th>';
+    html += '<th>Score</th>';
+    html += '<th>Buchholz</th>';
+    html += '<th>Blancs</th>';
+    html += '<th>Noirs</th>';
+    html += '</tr></thead><tbody>';
+
+    sortedFinal.forEach(function (p, idx) {
+      var counts = colorCounts(p);
+      html += '<tr>';
+      html += '<td>' + (idx + 1) + '</td>';
+      html += '<td><strong>' + escapeHtml(p.name) + '</strong></td>';
+      html += '<td>' + formatScore(p.score) + '</td>';
+      html += '<td>' + Number(p.buchholz || 0).toFixed(1) + '</td>';
+      html += '<td>' + counts.w + '</td>';
+      html += '<td>' + counts.b + '</td>';
+      html += '</tr>';
+    });
+
+    html += '</tbody></table>';
+    html += '</section>';
+    return html;
+  }
+
+  function buildHistoryHtml() {
+    var html = '<section class="print-section">';
+    html += '<h2>Historique des joueurs</h2>';
+
+    if (!sortedFinal.length) {
+      html += '<p class="muted">Aucun historique disponible.</p>';
+      html += '</section>';
+      return html;
+    }
+
+    sortedFinal.forEach(function (p, idx) {
+      html += '<div class="player-history">';
+      html += '<div class="player-history-head">';
+      html += '<div class="player-rank">' + (idx + 1) + '</div>';
+      html += '<div>';
+      html += '<h3>' + escapeHtml(p.name) + '</h3>';
+      html += '<p>Score final : <strong>' + formatScore(p.score) + '</strong> • Buchholz : <strong>' + Number(p.buchholz || 0).toFixed(1) + '</strong></p>';
+      html += '</div>';
+      html += '</div>';
+
+      if (!p.resultsByRound || p.resultsByRound.length === 0) {
+        html += '<p class="muted">Aucune ronde jouée.</p>';
+      } else {
+        html += '<table class="print-table compact">';
+        html += '<thead><tr><th>Ronde</th><th>Couleur</th><th>Adversaire</th><th>Résultat</th><th>Points</th></tr></thead><tbody>';
+
+        p.resultsByRound.forEach(function (r) {
+          html += '<tr>';
+          html += '<td>' + r.round + '</td>';
+          html += '<td>' + escapeHtml(r.color || 'BYE') + '</td>';
+          html += '<td>' + (r.opponent ? escapeHtml(r.opponent) : '—') + '</td>';
+          html += '<td>' + escapeHtml(r.result) + '</td>';
+          html += '<td>' + formatScore(r.points) + '</td>';
+          html += '</tr>';
+        });
+
+        html += '</tbody></table>';
+      }
+
+      html += '</div>';
+    });
+
+    html += '</section>';
+    return html;
+  }
+
+  var content = '';
+  content += '<!DOCTYPE html>';
+  content += '<html lang="fr">';
+  content += '<head>';
+  content += '<meta charset="UTF-8">';
+  content += '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
+  content += '<title>Emental - Export tournoi</title>';
+  content += '<style>';
+  content += '@page { size: auto; margin: 14mm; }';
+  content += 'body { font-family: Arial, Helvetica, sans-serif; color: #0f172a; margin: 0; padding: 0; background: #fff; }';
+  content += '.page { max-width: 1100px; margin: 0 auto; }';
+  content += '.header { border-bottom: 2px solid #cbd5e1; padding-bottom: 14px; margin-bottom: 24px; }';
+  content += '.title { font-size: 28px; font-weight: 800; margin: 0 0 8px 0; }';
+  content += '.subtitle { margin: 0; color: #475569; font-size: 14px; line-height: 1.5; }';
+  content += '.meta-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 18px; }';
+  content += '.meta-card { border: 1px solid #dbe4f0; border-radius: 12px; padding: 12px 14px; background: #f8fafc; }';
+  content += '.meta-card .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: #64748b; margin-bottom: 6px; }';
+  content += '.meta-card .value { font-size: 18px; font-weight: 800; color: #0f172a; }';
+  content += '.print-section { margin-top: 28px; page-break-inside: avoid; }';
+  content += 'h2 { font-size: 20px; margin: 0 0 12px 0; padding-bottom: 6px; border-bottom: 1px solid #e2e8f0; }';
+  content += 'h3 { font-size: 16px; margin: 0 0 6px 0; }';
+  content += '.muted { color: #64748b; }';
+  content += '.print-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }';
+  content += '.print-table th, .print-table td { border: 1px solid #cbd5e1; padding: 8px 10px; text-align: left; vertical-align: top; }';
+  content += '.print-table th { background: #f8fafc; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: #334155; }';
+  content += '.print-table.compact { font-size: 12px; margin-top: 8px; }';
+  content += '.player-history { border: 1px solid #dbe4f0; border-radius: 14px; padding: 14px; margin-bottom: 16px; page-break-inside: avoid; }';
+  content += '.player-history-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }';
+  content += '.player-rank { width: 34px; height: 34px; border-radius: 999px; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: 800; }';
+  content += '.footer { margin-top: 28px; padding-top: 12px; border-top: 1px solid #e2e8f0; color: #64748b; font-size: 12px; }';
+  content += '@media print { .print-section { page-break-inside: avoid; } }';
+  content += '@media (max-width: 700px) { .meta-grid { grid-template-columns: 1fr 1fr; } .title { font-size: 22px; } }';
+  content += '</style>';
+  content += '</head>';
+  content += '<body>';
+  content += '<div class="page">';
+
+  content += '<div class="header">';
+  content += '<h1 class="title">♟️ Emental — Export complet du tournoi</h1>';
+  content += '<p class="subtitle">Document généré automatiquement depuis Emental. Export imprimable optimisé pour PDF.</p>';
+
+  content += '<div class="meta-grid">';
+  content += '<div class="meta-card"><div class="label">Date d’export</div><div class="value">' + escapeHtml(exportDate) + '</div></div>';
+  content += '<div class="meta-card"><div class="label">Joueurs</div><div class="value">' + sortedFinal.length + '</div></div>';
+  content += '<div class="meta-card"><div class="label">Ronde atteinte</div><div class="value">' + currentRoundDisplay + '</div></div>';
+  content += '<div class="meta-card"><div class="label">Rondes théoriques</div><div class="value">' + totalRoundsDisplay + '</div></div>';
+  content += '</div>';
+  content += '</div>';
+
+  content += buildRankingHtml();
+  content += buildRoundsHtml();
+  content += buildHistoryHtml();
+
+  content += '<div class="footer">';
+  content += 'Export généré par Emental • Développé par Erwan Perfetti • ' + escapeHtml(exportDate);
+  content += '</div>';
+
+  content += '</div>';
+  content += '</body>';
+  content += '</html>';
+
+  var win = window.open('', '', 'width=1100,height=900');
+  if (!win) {
+    setMessage('Impossible d’ouvrir la fenêtre d’export PDF. Vérifiez le bloqueur de pop-up.');
+    return;
+  }
+
+  win.document.open();
+  win.document.write(content);
+  win.document.close();
+  win.focus();
+
+  setTimeout(function () {
+    try {
+      win.print();
+    } catch (e) {
+      setMessage('Impossible de lancer l’impression PDF sur cet appareil.');
+    }
+  }, 300);
+}
 
   function clearPlayers() {
     if (!confirm('Effacer toute la liste des joueurs ?')) return;
