@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
-  <title>Emental - V10.1 Pro. Correction rondes Expert.</title>
+  <title>Emental - V11 Expert Elo / FIDE-style</title>
   <style>
     :root {
       --bg: #f4f7fb;
@@ -22,6 +22,7 @@
       --radius-sm: 16px;
       --soft-blue: #edf4ff;
       --soft-amber: #fff8eb;
+      --soft-green: #effdf3;
     }
 
     * { box-sizing: border-box; }
@@ -35,7 +36,7 @@
       padding: 24px;
     }
 
-    .container { max-width: 1440px; margin: 0 auto; display: grid; gap: 20px; }
+    .container { max-width: 1500px; margin: 0 auto; display: grid; gap: 20px; }
     .grid-top { display: grid; gap: 20px; grid-template-columns: 430px 1fr; align-items: start; }
 
     .card {
@@ -186,7 +187,7 @@
     .info-grid {
       display: grid;
       gap: 12px;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
       margin-top: 16px;
     }
 
@@ -209,7 +210,7 @@
 
     .stat p {
       margin: 0;
-      font-size: 1.55rem;
+      font-size: 1.35rem;
       font-weight: 800;
     }
 
@@ -220,6 +221,10 @@
     .stat.amber h4 { color: #b45309; }
     .stat.amber p { font-size: 1rem; font-weight: 700; line-height: 1.5; }
 
+    .stat.green { background: var(--soft-green); border-color: #c8f3d5; }
+    .stat.green h4 { color: #15803d; }
+    .stat.green p { font-size: 1.05rem; font-weight: 700; line-height: 1.5; }
+
     .message, .autosave-banner, .warning { border-radius: 18px; line-height: 1.45; }
 
     .message {
@@ -228,6 +233,7 @@
       background: #f8fafc;
       border: 1px solid var(--border);
       color: #334155;
+      white-space: pre-wrap;
     }
 
     .warning {
@@ -236,6 +242,7 @@
       background: #fff7ed;
       border: 1px solid #fed7aa;
       color: #92400e;
+      white-space: pre-wrap;
     }
 
     .autosave-banner {
@@ -281,7 +288,7 @@
       border-radius: 22px;
       padding: 14px;
       display: grid;
-      grid-template-columns: 72px 1fr 44px 1fr 240px;
+      grid-template-columns: 88px 1fr 44px 1fr 290px;
       gap: 12px;
       align-items: center;
       background: #fff;
@@ -313,16 +320,19 @@
       margin-bottom: 6px;
     }
 
-    .player-name { font-weight: 800; }
+    .player-name { font-weight: 800; line-height: 1.35; }
+    .player-sub { font-size: 0.84rem; opacity: 0.8; margin-top: 4px; }
     .arrow { text-align: center; color: #94a3b8; font-size: 1.2rem; }
 
     .pair-meta {
       color: var(--muted);
       font-size: 0.8rem;
       margin-bottom: 8px;
+      line-height: 1.4;
+      white-space: pre-wrap;
     }
 
-    .pairing.bye { grid-template-columns: 90px 1fr 120px; background: #fafcff; }
+    .pairing.bye { grid-template-columns: 90px 1fr 140px; background: #fafcff; }
 
     .result-buttons {
       display: none;
@@ -379,7 +389,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 760px;
+      min-width: 980px;
     }
 
     th, td {
@@ -387,6 +397,7 @@
       padding: 12px 14px;
       border-bottom: 1px solid #e9eef5;
       font-size: 0.95rem;
+      vertical-align: top;
     }
 
     th {
@@ -398,10 +409,21 @@
     }
 
     .color-badges { display: flex; gap: 6px; flex-wrap: wrap; }
-    .mini-badge { border-radius: 999px; padding: 3px 8px; font-size: 0.72rem; font-weight: 800; }
+    .mini-badge {
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
     .mini-badge.white { background: #eef2f7; color: #0f172a; }
     .mini-badge.black { background: #0f172a; color: #fff; }
     .mini-badge.bye { background: #dcfce7; color: #166534; }
+    .mini-badge.delta-plus { background: #dcfce7; color: #166534; }
+    .mini-badge.delta-minus { background: #fee2e2; color: #991b1b; }
+    .mini-badge.delta-zero { background: #e2e8f0; color: #334155; }
 
     .chart-toolbar {
       display: flex;
@@ -458,7 +480,7 @@
     .history-grid {
       display: grid;
       gap: 14px;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     }
 
     .history-card {
@@ -477,12 +499,14 @@
       margin: 0;
       font-size: 1rem;
       font-weight: 800;
+      line-height: 1.35;
     }
 
     .history-subtitle {
       margin: 6px 0 0 0;
       color: var(--muted);
       font-size: 0.9rem;
+      line-height: 1.5;
     }
 
     .round-item {
@@ -491,7 +515,7 @@
       border-radius: 18px;
       padding: 12px;
       font-size: 0.92rem;
-      line-height: 1.45;
+      line-height: 1.5;
     }
 
     .round-head {
@@ -509,8 +533,62 @@
       line-height: 1.5;
     }
 
-    @media (max-width: 1100px) {
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 16px;
+    }
+
+    .modal-content {
+      background: #fff;
+      border-radius: 20px;
+      max-width: 620px;
+      width: 100%;
+      padding: 20px;
+    }
+
+    .modal-summary {
+      white-space: pre-wrap;
+      background: #f8fafc;
+      padding: 12px;
+      border-radius: 12px;
+      margin-top: 10px;
+      max-height: 320px;
+      overflow-y: auto;
+      line-height: 1.5;
+    }
+
+    .modal-actions {
+      margin-top: 15px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .bad { color: #b91c1c; font-weight: 700; }
+    .good { color: #166534; font-weight: 700; }
+
+    .modal-stack { display: grid; gap: 12px; }
+    .impact-summary {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      border-radius: 14px;
+      white-space: pre-wrap;
+      line-height: 1.45;
+    }
+    .inline-field { margin-top: 10px; }
+
+    @media (max-width: 1200px) {
       .grid-top { grid-template-columns: 1fr; }
+      table { min-width: 900px; }
     }
 
     @media (max-width: 900px) {
@@ -550,7 +628,7 @@
       select.pairing-select { display: none; }
       .result-buttons { display: grid; }
 
-      table { min-width: 650px; }
+      table { min-width: 760px; }
       th, td { font-size: 14px; padding: 10px; }
 
       .canvas-wrap { padding: 6px; }
@@ -561,58 +639,6 @@
 
       .field { width: 100%; }
     }
-
-    .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.6);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-      padding: 16px;
-    }
-
-    .modal-content {
-      background: #fff;
-      border-radius: 20px;
-      max-width: 520px;
-      width: 100%;
-      padding: 20px;
-    }
-
-    .modal-summary {
-      white-space: pre-wrap;
-      background: #f8fafc;
-      padding: 12px;
-      border-radius: 12px;
-      margin-top: 10px;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-
-    .modal-actions {
-      margin-top: 15px;
-      display: grid;
-      gap: 10px;
-    }
-
-    .bad { color: #b91c1c; font-weight: 700; }
-    .good { color: #166534; font-weight: 700; }
-
-    .modal-stack { display: grid; gap: 12px; }
-    .impact-summary {
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      padding: 12px 14px;
-      border-radius: 14px;
-      white-space: pre-wrap;
-      line-height: 1.45;
-    }
-    .inline-field { margin-top: 10px; }
   </style>
 </head>
 <body>
@@ -646,24 +672,24 @@
     <section class="card">
       <div class="card-header">
         <h1 class="card-title">♟️ Emental</h1>
-        <p class="card-description">Version V10.1 Pro. Correction des rondes Suisses niveau Expert.</p>
+        <p class="card-description">Version V11 Expert — appariement Suisse Elo / FIDE-style et recalcul Elo de fin de tournoi.</p>
       </div>
       <div class="card-body">
-        <label class="label" for="playersInput">Liste des joueurs (un nom par ligne)</label>
-        <textarea id="playersInput">Sullivan
-Julien Song
-Dina Belenkaya
-Cacahuete
-Lucie
-Doggy
-Les Lapines
-Sulliette
-Picpus
-Pettson
-Jean-Louis
-Grégoire
-Adeline
-Erwan</textarea>
+        <label class="label" for="playersInput">Liste des joueurs (un joueur par ligne : Nom ELO)</label>
+        <textarea id="playersInput">Sullivan 1200
+Julien Song 2200
+Dina Belenkaya 2300
+Cacahuete 1800
+Lucie 1700
+Doggy 800
+Les Lapines 800
+Sulliette 900
+Picpus 1100
+Pettson 1100
+Jean-Louis 1100
+Grégoire 1300
+Adeline 1400
+Erwan 1300</textarea>
 
         <div class="subsection-label">Lancement</div>
         <div class="buttons-3">
@@ -680,6 +706,7 @@ Erwan</textarea>
         <div class="info-grid" id="infoGrid" style="display:none;">
           <div class="stat blue"><h4>Ronde</h4><p id="roundStat">—</p></div>
           <div class="stat amber"><h4>Projection</h4><p id="projectionStat">—</p></div>
+          <div class="stat green"><h4>Mode Elo</h4><p id="eloModeStat">FIDE-style • K=20</p></div>
         </div>
       </div>
     </section>
@@ -687,7 +714,7 @@ Erwan</textarea>
     <section class="card">
       <div class="card-header">
         <h2 class="card-title">🏆 Appariements de la ronde</h2>
-        <p class="card-description">Appariement par score.</p>
+        <p class="card-description">Appariement Suisse orienté Elo / FIDE-style : ordre initial par Elo, rondes suivantes par groupes de score, contraintes de couleurs, anti-rematch et bye cohérent.</p>
       </div>
       <div class="card-body">
         <div id="warnings"></div>
@@ -713,7 +740,11 @@ Erwan</textarea>
             <thead>
               <tr>
                 <th>#</th>
+                <th>TPN</th>
                 <th>Joueur</th>
+                <th>Elo initial</th>
+                <th>Elo actuel</th>
+                <th>Δ Elo</th>
                 <th>Score</th>
                 <th>Buchholz</th>
                 <th>Blancs</th>
@@ -722,7 +753,7 @@ Erwan</textarea>
               </tr>
             </thead>
             <tbody id="rankingTableBody">
-              <tr><td colspan="7" style="color:#64748b;">Aucun joueur pour le moment.</td></tr>
+              <tr><td colspan="11" style="color:#64748b;">Aucun joueur pour le moment.</td></tr>
             </tbody>
           </table>
         </div>
@@ -750,7 +781,7 @@ Erwan</textarea>
   <section class="card correct-card">
     <div class="card-header">
       <h2 class="card-title">✏️ Correction de ronde</h2>
-      <p class="card-description">Revenir sur une ronde jouée, corriger les résultats et annuler les rondes suivantes si nécessaire.</p>
+      <p class="card-description">Revenir sur une ronde jouée, corriger les résultats et annuler/rejouer les rondes suivantes si nécessaire, avec recalcul des Elo.</p>
     </div>
     <div class="card-body">
       <div class="correct-box" id="correctionBox" style="display:none;">
@@ -772,7 +803,7 @@ Erwan</textarea>
         </div>
         <div class="small-note">
           Après correction, l’application tente d’abord de réappliquer automatiquement les rondes futures si les appariements restent identiques.
-          Si une divergence apparaît, vous choisissez alors comment continuer.
+          Si une divergence apparaît, vous choisissez alors comment continuer. Les Elo sont recalculés à partir de la ronde corrigée.
         </div>
       </div>
     </div>
@@ -781,26 +812,27 @@ Erwan</textarea>
   <section class="card">
     <div class="card-header">
       <h2 class="card-title">🧰 Actions système</h2>
-      <p class="card-description">Gestion export, réinitialisation.</p>
+      <p class="card-description">Export, réinitialisation et nouveau tournoi.</p>
     </div>
     <div class="card-body">
       <div class="action-stack">
         <div class="buttons-3">
           <button class="button" onclick="exportPDF()">🖨️ Export PDF complet</button>
           <div></div>
+          <div></div>
         </div>
+
         <div class="buttons-3">
-  <button class="button outline full" onclick="resetTournament()">Réinitialisation</button>
+          <button class="button outline full" onclick="resetTournament()">Réinitialisation</button>
+          <div></div>
+          <div></div>
+        </div>
 
-</div>
-
-
-
-<div class="buttons-3">
-  <button class="button success full" onclick="newTournament()">Nouveau tournoi</button>
-  <div></div>
-  <div></div>
-</div>
+        <div class="buttons-3">
+          <button class="button success full" onclick="newTournament()">Nouveau tournoi</button>
+          <div></div>
+          <div></div>
+        </div>
       </div>
     </div>
   </section>
@@ -820,13 +852,10 @@ Erwan</textarea>
   ];
 
   var palette = ['#2563eb', '#16a34a', '#dc2626', '#7c3aed', '#ea580c', '#0891b2', '#db2777', '#65a30d', '#0f766e', '#9333ea', '#1d4ed8', '#be123c'];
-  var STORAGE_KEY = 'tournoi_suisse_html_autosave_v81e';
-  var suspendAutosave = false;
+  var STORAGE_KEY = 'emental_v11_expert_elo_fide_style_v1';
 
-var INITIAL_PLAYERS_TEXT = '';
-var FORCE_NEW_TOURNAMENT_KEY = 'emental_force_new_tournament_v1';
-var AUTOSAVE_DISABLED_KEY = 'emental_autosave_disabled_v1';
-
+  var INITIAL_PLAYERS_TEXT = '';
+  var DEFAULT_K_FACTOR = 20;
 
   var state = {
     players: [],
@@ -853,6 +882,7 @@ var AUTOSAVE_DISABLED_KEY = 'emental_autosave_disabled_v1';
     el.infoGrid = document.getElementById('infoGrid');
     el.roundStat = document.getElementById('roundStat');
     el.projectionStat = document.getElementById('projectionStat');
+    el.eloModeStat = document.getElementById('eloModeStat');
     el.warnings = document.getElementById('warnings');
     el.pairingsArea = document.getElementById('pairingsArea');
     el.pairingsControls = document.getElementById('pairingsControls');
@@ -889,58 +919,143 @@ var AUTOSAVE_DISABLED_KEY = 'emental_autosave_disabled_v1';
   }
 
   function formatScore(x) {
+    if (typeof x !== 'number') return String(x || '');
     return Number.isInteger(x) ? String(x) : String(x).replace('.5', ',5');
   }
 
+  function formatElo(x) {
+    return String(Math.round(Number(x || 0)));
+  }
+
+  function formatDelta(x) {
+    var v = Number(x || 0);
+    if (Math.abs(v) < 0.005) return '0,0';
+    var s = (v > 0 ? '+' : '') + v.toFixed(1);
+    return s.replace('.', ',');
+  }
+
+  function deltaBadgeClass(delta) {
+    if (delta > 0.0001) return 'delta-plus';
+    if (delta < -0.0001) return 'delta-minus';
+    return 'delta-zero';
+  }
+
+  function normalizeNameKey(name) {
+    return String(name || '').trim().toLowerCase();
+  }
+
+  function initializePlayer(name, elo, idx) {
+    return {
+      id: 'P' + (idx + 1),
+      name: name,
+      eloInitial: Number(elo),
+      eloCurrent: Number(elo),
+      eloDelta: 0,
+      kFactor: DEFAULT_K_FACTOR,
+
+      seed: idx + 1,
+      initialRank: idx + 1,
+
+      score: 0,
+      buchholz: 0,
+
+      opponents: [],
+      colors: [],
+      byeReceived: false,
+
+      resultsByRound: [],
+      scoreHistory: [0],
+      ratingHistory: [Number(elo)]
+    };
+  }
+
+  function parsePlayerLine(line, idx) {
+    var cleaned = String(line || '').trim().replace(/\s+/g, ' ');
+    if (!cleaned) return null;
+
+    var match = cleaned.match(/^(.*?)[\s]+(-?\d+(?:\.\d+)?)$/);
+    if (!match) {
+      throw new Error('Ligne invalide (format attendu : "Nom Elo") : ' + cleaned);
+    }
+
+    var name = String(match[1] || '').trim();
+    var elo = Number(match[2]);
+
+    if (!name) {
+      throw new Error('Nom vide détecté sur la ligne : ' + cleaned);
+    }
+    if (!Number.isFinite(elo)) {
+      throw new Error('Elo invalide sur la ligne : ' + cleaned);
+    }
+    if (elo < 0) {
+      throw new Error('Elo négatif interdit sur la ligne : ' + cleaned);
+    }
+
+    return initializePlayer(name, elo, idx);
+  }
+
+  function assignInitialOrderAndSeeds(players) {
+    var sorted = players.slice().sort(function(a, b) {
+      if (b.eloInitial !== a.eloInitial) return b.eloInitial - a.eloInitial;
+      return a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' });
+    });
+
+    return sorted.map(function(p, idx) {
+      var cp = deepCopy(p);
+      cp.seed = idx + 1;
+      cp.initialRank = idx + 1;
+      cp.id = 'P' + (idx + 1);
+      return cp;
+    });
+  }
+
   function parsePlayers(text) {
-    var seen = {};
-    return text
+    var rawLines = String(text || '')
       .split('\n')
-      .map(function (x) { return x.trim(); })
-      .filter(Boolean)
-      .filter(function (name) {
-        var key = name.toLowerCase();
-        if (seen[key]) return false;
-        seen[key] = true;
-        return true;
-      })
-      .map(function (name, idx) {
-        return {
-          id: 'P' + (idx + 1),
-          name: name,
-          seed: idx + 1,
-          score: 0,
-          buchholz: 0,
-          opponents: [],
-          colors: [],
-          byeReceived: false,
-          resultsByRound: [],
-          scoreHistory: [0]
-        };
-      });
+      .map(function(x) { return x.trim(); })
+      .filter(Boolean);
+
+    var parsed = [];
+    var seen = {};
+
+    rawLines.forEach(function(line, idx) {
+      var player = parsePlayerLine(line, idx);
+      var key = normalizeNameKey(player.name);
+      if (seen[key]) {
+        throw new Error('Nom en doublon détecté : ' + player.name);
+      }
+      seen[key] = true;
+      parsed.push(player);
+    });
+
+    return assignInitialOrderAndSeeds(parsed);
   }
 
   function countPlayersInTextarea() {
     return (el.playersInput.value || '')
       .split('\n')
-      .map(function (x) { return x.trim(); })
-      .filter(function (x) { return x.length > 0; })
+      .map(function(x) { return x.trim(); })
+      .filter(function(x) { return x.length > 0; })
       .length;
   }
 
+  function getCurrentPlayersText() {
+    return (el.playersInput && typeof el.playersInput.value === 'string' ? el.playersInput.value : '')
+      .split('\n')
+      .map(function(x) { return x.trim(); })
+      .filter(Boolean)
+      .join('\n');
+  }
 
-function getCurrentPlayersText() {
-  var text = (el.playersInput && typeof el.playersInput.value === 'string')
-    ? el.playersInput.value
-    : '';
-
-  return text
-    .split('\n')
-    .map(function (x) { return x.trim(); })
-    .filter(Boolean)
-    .join('\n');
-}
-
+  function rebuildPlayersTextFromCurrentSeedOrder() {
+    return state.players
+      .slice()
+      .sort(comparePlayersInitial)
+      .map(function(p) {
+        return p.name + ' ' + formatElo(p.eloInitial);
+      })
+      .join('\n');
+  }
 
   function updateStartButtonLabel() {
     var count = countPlayersInTextarea();
@@ -980,7 +1095,7 @@ function getCurrentPlayersText() {
       return;
     }
 
-    var allResultsEntered = state.pairings.every(function (p) {
+    var allResultsEntered = state.pairings.every(function(p) {
       return p.type === 'bye' || !!p.result;
     });
 
@@ -1000,15 +1115,15 @@ function getCurrentPlayersText() {
   }
 
   function colorCounts(player) {
-    var w = player.colors.filter(function (c) { return c === 'W'; }).length;
-    var b = player.colors.filter(function (c) { return c === 'B'; }).length;
+    var w = player.colors.filter(function(c) { return c === 'W'; }).length;
+    var b = player.colors.filter(function(c) { return c === 'B'; }).length;
     return { w: w, b: b, diff: w - b };
   }
 
   function streakPenalty(colors, nextColor) {
     var n = colors.length;
-    if (n >= 2 && colors[n - 1] === nextColor && colors[n - 2] === nextColor) return 1000;
-    if (n >= 1 && colors[n - 1] === nextColor) return 4;
+    if (n >= 2 && colors[n - 1] === nextColor && colors[n - 2] === nextColor) return 10000;
+    if (n >= 1 && colors[n - 1] === nextColor) return 12;
     return 0;
   }
 
@@ -1025,13 +1140,20 @@ function getCurrentPlayersText() {
   function colorPenalty(player, color) {
     var c = colorCounts(player);
     var newDiff = color === 'W' ? (c.w + 1) - c.b : c.w - (c.b + 1);
-    var absDiffPenalty = Math.max(0, Math.abs(newDiff) - 2) * 200;
+    var absDiffPenalty = Math.max(0, Math.abs(newDiff) - 2) * 500;
     var pref = preferredColor(player);
-    var prefPenalty = pref && pref !== color ? 6 : 0;
+    var prefPenalty = pref && pref !== color ? 8 : 0;
     return absDiffPenalty + streakPenalty(player.colors, color) + prefPenalty;
   }
 
-  function chooseColors(p1, p2) {
+  function chooseColors(p1, p2, roundNumber) {
+    if (roundNumber === 1) {
+      if ((p1.seed % 2) === 1) {
+        return { white: p1.id, black: p2.id, score: 0 };
+      }
+      return { white: p2.id, black: p1.id, score: 0 };
+    }
+
     var optionA = {
       white: p1.id,
       black: p2.id,
@@ -1042,76 +1164,221 @@ function getCurrentPlayersText() {
       black: p1.id,
       score: colorPenalty(p2, 'W') + colorPenalty(p1, 'B')
     };
-    return optionA.score <= optionB.score ? optionA : optionB;
+
+    if (optionA.score !== optionB.score) {
+      return optionA.score <= optionB.score ? optionA : optionB;
+    }
+
+    var p1Pref = preferredColor(p1);
+    var p2Pref = preferredColor(p2);
+
+    if (p1Pref === 'W' && p2Pref === 'B') return optionA;
+    if (p1Pref === 'B' && p2Pref === 'W') return optionB;
+
+    return p1.seed < p2.seed ? optionA : optionB;
   }
 
   function computeBuchholz(players) {
     var map = {};
-    players.forEach(function (p) { map[p.id] = p; });
+    players.forEach(function(p) { map[p.id] = p; });
 
-    return players.map(function (p) {
+    return players.map(function(p) {
       var cp = deepCopy(p);
-      cp.buchholz = p.opponents.reduce(function (sum, oppId) {
+      cp.buchholz = p.opponents.reduce(function(sum, oppId) {
         return sum + ((map[oppId] && map[oppId].score) || 0);
       }, 0);
       return cp;
     });
   }
 
+  function comparePlayersInitial(a, b) {
+    if (a.seed !== b.seed) return a.seed - b.seed;
+    return a.name.localeCompare(b.name, 'fr', { sensitivity: 'base' });
+  }
+
   function comparePlayers(a, b) {
     if (b.score !== a.score) return b.score - a.score;
     if ((b.buchholz || 0) !== (a.buchholz || 0)) return (b.buchholz || 0) - (a.buchholz || 0);
+    if (b.eloCurrent !== a.eloCurrent) return b.eloCurrent - a.eloCurrent;
+    return a.seed - b.seed;
+  }
+
+  function compareWithinScoreGroup(a, b) {
+    if ((b.buchholz || 0) !== (a.buchholz || 0)) return (b.buchholz || 0) - (a.buchholz || 0);
+    if (b.eloCurrent !== a.eloCurrent) return b.eloCurrent - a.eloCurrent;
     return a.seed - b.seed;
   }
 
   function candidateBye(players) {
-    return players.slice().sort(function (a, b) {
+    return players.slice().sort(function(a, b) {
       if (a.byeReceived !== b.byeReceived) return a.byeReceived ? 1 : -1;
       if (a.score !== b.score) return a.score - b.score;
       if ((a.buchholz || 0) !== (b.buchholz || 0)) return (a.buchholz || 0) - (b.buchholz || 0);
+      if (a.eloCurrent !== b.eloCurrent) return a.eloCurrent - b.eloCurrent;
       return b.seed - a.seed;
     })[0] || null;
   }
 
-  function pairingCost(a, b) {
-    var alreadyPlayed = a.opponents.indexOf(b.id) >= 0;
-    var scoreDiff = Math.abs(a.score - b.score);
-    var colors = chooseColors(a, b);
-    var rankGap = Math.abs(a.seed - b.seed) * 0.01;
-    return (alreadyPlayed ? 100000 : 0) + scoreDiff * 100 + colors.score + rankGap;
+  function clampRatingDiff(diff) {
+    if (diff > 400) return 400;
+    if (diff < -400) return -400;
+    return diff;
   }
 
-  function recursePair(list) {
+  function expectedScore(ra, rb) {
+    var diff = clampRatingDiff(rb - ra);
+    return 1 / (1 + Math.pow(10, diff / 400));
+  }
+
+  function getKFactor(player) {
+    return Number(player.kFactor || DEFAULT_K_FACTOR);
+  }
+
+  function pairingCost(a, b, roundNumber) {
+    var alreadyPlayed = a.opponents.indexOf(b.id) >= 0;
+    var scoreDiff = Math.abs(a.score - b.score);
+    var colors = chooseColors(a, b, roundNumber);
+    var seedGap = Math.abs(a.seed - b.seed);
+    var eloGap = Math.abs(a.eloCurrent - b.eloCurrent);
+    return (alreadyPlayed ? 1000000 : 0)
+      + scoreDiff * 1000
+      + colors.score
+      + seedGap * 0.4
+      + eloGap * 0.02;
+  }
+
+  function recursePair(list, roundNumber) {
     if (list.length === 0) return { cost: 0, pairs: [] };
+    if (list.length % 2 === 1) return { cost: 1e12, pairs: [] };
 
     var first = list[0];
     var rest = list.slice(1);
 
-    var order = rest
-      .map(function (cand, idx) { return { cand: cand, idx: idx }; })
-      .sort(function (x, y) {
-        return pairingCost(first, x.cand) - pairingCost(first, y.cand);
+    var ordered = rest
+      .map(function(cand, idx) { return { cand: cand, idx: idx }; })
+      .sort(function(x, y) {
+        return pairingCost(first, x.cand, roundNumber) - pairingCost(first, y.cand, roundNumber);
       });
 
     var best = null;
+    var maxCandidates = Math.min(ordered.length, 7); // garde le moteur réactif
 
-    for (var i = 0; i < order.length; i++) {
-      var item = order[i];
-      var remaining = rest.filter(function (_, j) { return j !== item.idx; });
-      var sub = recursePair(remaining);
-      var total = sub.cost + pairingCost(first, item.cand);
+    for (var i = 0; i < maxCandidates; i++) {
+      var item = ordered[i];
+      var remaining = rest.filter(function(_, j) { return j !== item.idx; });
+      var sub = recursePair(remaining, roundNumber);
+      var c = pairingCost(first, item.cand, roundNumber);
+      var total = sub.cost + c;
 
       if (!best || total < best.cost) {
         best = { cost: total, pairs: [[first, item.cand]].concat(sub.pairs) };
       }
     }
 
-    return best;
+    return best || { cost: 1e12, pairs: [] };
+  }
+
+  function buildRoundOnePairings(players, roundNumber) {
+    var warnings = [];
+    var ordered = players.slice().sort(comparePlayersInitial);
+    var byePair = null;
+
+    if (ordered.length % 2 === 1) {
+      var byePlayer = candidateBye(ordered);
+      byePair = {
+        type: 'bye',
+        playerId: byePlayer.id,
+        playerName: byePlayer.name,
+        playerElo: byePlayer.eloCurrent,
+        table: null,
+        round: roundNumber,
+        result: '1-bye'
+      };
+      ordered = ordered.filter(function(p) { return p.id !== byePlayer.id; });
+      warnings.push('Nombre impair : un bye non coté Elo a été attribué.');
+    }
+
+    var half = ordered.length / 2;
+    var upper = ordered.slice(0, half);
+    var lower = ordered.slice(half);
+
+    var pairs = [];
+    for (var i = 0; i < half; i++) {
+      var a = upper[i];
+      var b = lower[i];
+      var cols = chooseColors(a, b, roundNumber);
+      var white = cols.white === a.id ? a : b;
+      var black = cols.black === a.id ? a : b;
+
+      pairs.push({
+        type: 'match',
+        table: i + 1,
+        round: roundNumber,
+        whiteId: white.id,
+        whiteName: white.name,
+        whiteElo: white.eloCurrent,
+        blackId: black.id,
+        blackName: black.name,
+        blackElo: black.eloCurrent,
+        scoreGroup: String(Math.max(a.score, b.score)),
+        scoreGap: Math.abs(a.score - b.score),
+        result: ''
+      });
+    }
+
+    return {
+      pairings: byePair ? pairs.concat([byePair]) : pairs,
+      warnings: warnings
+    };
+  }
+
+  function buildScoreGroups(players) {
+    var groupsMap = {};
+    players.forEach(function(p) {
+      var key = String(p.score);
+      if (!groupsMap[key]) groupsMap[key] = [];
+      groupsMap[key].push(p);
+    });
+
+    return Object.keys(groupsMap)
+      .map(function(k) { return Number(k); })
+      .sort(function(a, b) { return b - a; })
+      .map(function(score) {
+        return { score: score, players: groupsMap[String(score)].slice().sort(compareWithinScoreGroup) };
+      });
+  }
+
+  function builtPairingsFromPairs(pairs, roundNumber, tableStart, scoreGroupLabel) {
+    return pairs.map(function(pair, idx) {
+      var a = pair[0];
+      var b = pair[1];
+      var cols = chooseColors(a, b, roundNumber);
+      var white = cols.white === a.id ? a : b;
+      var black = cols.black === a.id ? a : b;
+      return {
+        type: 'match',
+        table: tableStart + idx,
+        round: roundNumber,
+        whiteId: white.id,
+        whiteName: white.name,
+        whiteElo: white.eloCurrent,
+        blackId: black.id,
+        blackName: black.name,
+        blackElo: black.eloCurrent,
+        scoreGroup: String(scoreGroupLabel),
+        scoreGap: Math.abs(a.score - b.score),
+        result: ''
+      };
+    });
   }
 
   function buildSwissPairings(players, roundNumber) {
+    if (roundNumber === 1) {
+      return buildRoundOnePairings(players, roundNumber);
+    }
+
     var warnings = [];
-    var working = players.slice().sort(comparePlayers);
+    var working = computeBuchholz(players).sort(comparePlayers);
     var byePair = null;
 
     if (working.length % 2 === 1) {
@@ -1121,66 +1388,92 @@ function getCurrentPlayersText() {
           type: 'bye',
           playerId: byePlayer.id,
           playerName: byePlayer.name,
+          playerElo: byePlayer.eloCurrent,
           table: null,
           round: roundNumber,
           result: '1-bye'
         };
-        working = working.filter(function (p) { return p.id !== byePlayer.id; });
+        working = working.filter(function(p) { return p.id !== byePlayer.id; });
+        warnings.push('Nombre impair : un bye non coté Elo a été attribué.');
       }
     }
 
-    var exact = recursePair(working);
+    var groups = buildScoreGroups(working);
+    var carry = [];
+    var allPairings = [];
+    var tableCounter = 1;
 
-    if (exact.cost >= 100000) {
-      warnings.push('Certaines contraintes sont devenues difficiles à satisfaire ; un appariement de secours a pu être utilisé en fin de tournoi.');
+    for (var g = 0; g < groups.length; g++) {
+      var group = groups[g];
+      var list = carry.concat(group.players).sort(compareWithinScoreGroup);
+      carry = [];
+
+      if (list.length % 2 === 1) {
+        var floater = list[list.length - 1];
+        carry.push(floater);
+        list = list.slice(0, -1);
+      }
+
+      if (list.length > 0) {
+        var exact = recursePair(list, roundNumber);
+        if (exact.cost >= 1000000) {
+          warnings.push('Certaines contraintes sont devenues difficiles à satisfaire ; un appariement de secours a été utilisé.');
+        }
+        allPairings = allPairings.concat(
+          builtPairingsFromPairs(exact.pairs, roundNumber, tableCounter, group.score)
+        );
+        tableCounter += exact.pairs.length;
+      }
     }
 
-    var matchPairs = exact.pairs.map(function (pair, idx) {
-      var a = pair[0];
-      var b = pair[1];
-      var cols = chooseColors(a, b);
-      var white = cols.white === a.id ? a : b;
-      var black = cols.black === a.id ? a : b;
+    if (carry.length === 2) {
+      var lastPairs = recursePair(carry, roundNumber);
+      allPairings = allPairings.concat(
+        builtPairingsFromPairs(lastPairs.pairs, roundNumber, tableCounter, Math.max(carry[0].score, carry[1].score))
+      );
+      tableCounter += lastPairs.pairs.length;
+      carry = [];
+    }
 
-      return {
-        type: 'match',
-        table: idx + 1,
-        round: roundNumber,
-        whiteId: white.id,
-        whiteName: white.name,
-        blackId: black.id,
-        blackName: black.name,
-        scoreGroup: String(Math.max(a.score, b.score)),
-        scoreGap: Math.abs(a.score - b.score),
-        result: ''
-      };
-    });
+    if (carry.length > 0) {
+      warnings.push('Impossible de résoudre proprement tous les floaters en fin de ronde.');
+    }
 
     return {
-      pairings: byePair ? matchPairs.concat([byePair]) : matchPairs,
+      pairings: byePair ? allPairings.concat([byePair]) : allPairings,
       warnings: warnings
     };
   }
 
   function applyRoundResults(players, pairings) {
     var map = new Map(
-      players.map(function (p) {
+      players.map(function(p) {
         return [p.id, {
           id: p.id,
           name: p.name,
+          eloInitial: p.eloInitial,
+          eloCurrent: p.eloCurrent,
+          eloDelta: p.eloDelta || 0,
+          kFactor: p.kFactor || DEFAULT_K_FACTOR,
+
           seed: p.seed,
+          initialRank: p.initialRank,
+
           score: p.score,
           buchholz: p.buchholz || 0,
+
           opponents: p.opponents.slice(),
           colors: p.colors.slice(),
           byeReceived: p.byeReceived,
+
           resultsByRound: deepCopy(p.resultsByRound),
-          scoreHistory: p.scoreHistory.slice()
+          scoreHistory: p.scoreHistory.slice(),
+          ratingHistory: p.ratingHistory ? p.ratingHistory.slice() : [p.eloCurrent]
         }];
       })
     );
 
-    pairings.forEach(function (pairing) {
+    pairings.forEach(function(pairing) {
       if (pairing.type === 'bye') {
         var pb = map.get(pairing.playerId);
         pb.score += 1;
@@ -1189,15 +1482,23 @@ function getCurrentPlayersText() {
           round: pairing.round,
           result: 'BYE',
           opponent: null,
+          opponentElo: null,
           color: null,
-          points: 1
+          points: 1,
+          ratingDelta: 0,
+          expectedScore: null,
+          actualScore: 1
         });
         pb.scoreHistory.push(pb.score);
+        pb.ratingHistory.push(pb.eloCurrent);
         return;
       }
 
       var white = map.get(pairing.whiteId);
       var black = map.get(pairing.blackId);
+
+      var whitePre = white.eloCurrent;
+      var blackPre = black.eloCurrent;
 
       if (white.opponents.indexOf(black.id) < 0) white.opponents.push(black.id);
       if (black.opponents.indexOf(white.id) < 0) black.opponents.push(white.id);
@@ -1207,37 +1508,67 @@ function getCurrentPlayersText() {
 
       var whitePoints = 0;
       var blackPoints = 0;
+      var whiteActual = 0;
+      var blackActual = 0;
 
       if (pairing.result === '1-0') {
         whitePoints = 1;
+        whiteActual = 1;
+        blackActual = 0;
       } else if (pairing.result === '0-1') {
         blackPoints = 1;
+        whiteActual = 0;
+        blackActual = 1;
       } else if (pairing.result === '0.5-0.5') {
         whitePoints = 0.5;
         blackPoints = 0.5;
+        whiteActual = 0.5;
+        blackActual = 0.5;
       }
 
       white.score += whitePoints;
       black.score += blackPoints;
 
+      var whiteExpected = expectedScore(whitePre, blackPre);
+      var blackExpected = expectedScore(blackPre, whitePre);
+
+      var whiteDelta = getKFactor(white) * (whiteActual - whiteExpected);
+      var blackDelta = getKFactor(black) * (blackActual - blackExpected);
+
+      white.eloCurrent = whitePre + whiteDelta;
+      black.eloCurrent = blackPre + blackDelta;
+
+      white.eloDelta = white.eloCurrent - white.eloInitial;
+      black.eloDelta = black.eloCurrent - black.eloInitial;
+
       white.resultsByRound.push({
         round: pairing.round,
         result: pairing.result,
         opponent: black.name,
+        opponentElo: blackPre,
         color: 'W',
-        points: whitePoints
+        points: whitePoints,
+        ratingDelta: whiteDelta,
+        expectedScore: whiteExpected,
+        actualScore: whiteActual
       });
 
       black.resultsByRound.push({
         round: pairing.round,
         result: pairing.result,
         opponent: white.name,
+        opponentElo: whitePre,
         color: 'B',
-        points: blackPoints
+        points: blackPoints,
+        ratingDelta: blackDelta,
+        expectedScore: blackExpected,
+        actualScore: blackActual
       });
 
       white.scoreHistory.push(white.score);
       black.scoreHistory.push(black.score);
+      white.ratingHistory.push(white.eloCurrent);
+      black.ratingHistory.push(black.eloCurrent);
     });
 
     return computeBuchholz(Array.from(map.values())).sort(comparePlayers);
@@ -1247,12 +1578,13 @@ function getCurrentPlayersText() {
     if (res === '1-0') return '1 - 0';
     if (res === '0-1') return '0 - 1';
     if (res === '0.5-0.5') return '½ - ½';
+    if (res === 'BYE' || res === '1-bye') return 'BYE';
     return res || '?';
   }
 
   function pairingReplayKey(pairing) {
     if (pairing.type === 'bye') return 'bye|' + pairing.playerId;
-    return 'match|' + pairing.whiteId + '|' + pairing.blackId;
+    return 'match|' + [pairing.whiteId, pairing.blackId].sort().join('|');
   }
 
   function arePairingsCompatible(generatedPairings, preservedPairings) {
@@ -1270,11 +1602,11 @@ function getCurrentPlayersText() {
 
   function copyResultsOntoPairings(generatedPairings, preservedPairings) {
     var resultMap = {};
-    preservedPairings.forEach(function (p) {
+    preservedPairings.forEach(function(p) {
       resultMap[pairingReplayKey(p)] = p.result || '';
     });
 
-    return generatedPairings.map(function (p) {
+    return generatedPairings.map(function(p) {
       var cp = deepCopy(p);
       if (Object.prototype.hasOwnProperty.call(resultMap, pairingReplayKey(p))) {
         cp.result = resultMap[pairingReplayKey(p)];
@@ -1301,7 +1633,8 @@ function getCurrentPlayersText() {
     base += '\nChoisissez comment continuer :\n' +
       '• Reprendre manuellement : la ronde divergente est générée, vous saisissez la suite vous-même.\n' +
       '• Recalcul strict : même comportement, mais on oublie les anciennes rondes restantes.\n' +
-      '• Conserver les rondes jouées : on réapplique les appariements/résultats enregistrés malgré la divergence.';
+      '• Conserver les rondes jouées : on réapplique les appariements/résultats enregistrés malgré la divergence.\n\n' +
+      'Les Elo seront ensuite recalculés à partir de la ronde corrigée.';
 
     return base;
   }
@@ -1317,12 +1650,12 @@ function getCurrentPlayersText() {
       activeTab: state.activeTab || 'classement'
     };
 
-    state.roundSnapshots = state.roundSnapshots.filter(function (s) {
+    state.roundSnapshots = state.roundSnapshots.filter(function(s) {
       return s.round !== snapshot.round;
     });
 
     state.roundSnapshots.push(snapshot);
-    state.roundSnapshots.sort(function (a, b) { return a.round - b.round; });
+    state.roundSnapshots.sort(function(a, b) { return a.round - b.round; });
   }
 
   function applyFreezeQueue(startPlayers, queue) {
@@ -1330,7 +1663,7 @@ function getCurrentPlayersText() {
     var first = queue.length ? queue[0].round : null;
     var last = queue.length ? queue[queue.length - 1].round : null;
 
-    queue.forEach(function (entry) {
+    queue.forEach(function(entry) {
       state.currentRound = entry.round;
       state.pairings = deepCopy(entry.pairings);
       state.warnings = ['Ronde conservée telle qu’elle a été jouée malgré une divergence des appariements suisses.'];
@@ -1368,7 +1701,7 @@ function getCurrentPlayersText() {
       state.warnings = ['Correction locale appliquée. Les rondes futures ont été conservées telles qu’elles ont été jouées.'];
       state.replayQueue = [];
       state.pendingCorrectionContext = null;
-      setMessage('Correction appliquée. Les ' + listRoundsLabel(keepResult.first, keepResult.last) + ' ont été conservées malgré la divergence des appariements.');
+      setMessage('Correction appliquée. Les ' + listRoundsLabel(keepResult.first, keepResult.last) + ' ont été conservées malgré la divergence.');
       saveToLocalStorage();
       renderAll();
       return;
@@ -1407,7 +1740,7 @@ function getCurrentPlayersText() {
       return {
         status: 'finished_freeze',
         players: freezeRes.players,
-        replayedRounds: replayedRounds.concat(queue.map(function (q) { return q.round; })),
+        replayedRounds: replayedRounds.concat(queue.map(function(q) { return q.round; })),
         firstFrozen: freezeRes.first,
         lastFrozen: freezeRes.last
       };
@@ -1454,7 +1787,7 @@ function getCurrentPlayersText() {
   }
 
   function chartRounds(currentRound) {
-    return Array.from({ length: currentRound + 1 }, function (_, i) { return i; });
+    return Array.from({ length: currentRound + 1 }, function(_, i) { return i; });
   }
 
   function setMessage(text) {
@@ -1478,22 +1811,17 @@ function getCurrentPlayersText() {
     el.autosaveBanner.textContent = text;
   }
 
-function updateAutosaveBanner() {
-  if (isAutosaveDisabled()) {
-    setAutosaveBanner('Sauvegarde automatique désactivée sur cet appareil.');
-    return;
-  }
+  function updateAutosaveBanner() {
+    if (!state.lastSavedAt) {
+      setAutosaveBanner('Sauvegarde automatique active dans ce navigateur.');
+      return;
+    }
 
-  if (!state.lastSavedAt) {
-    setAutosaveBanner('Sauvegarde automatique active dans ce navigateur.');
-    return;
+    setAutosaveBanner(
+      'Sauvegarde automatique active • dernière sauvegarde : ' +
+      new Date(state.lastSavedAt).toLocaleString('fr-FR')
+    );
   }
-
-  setAutosaveBanner(
-    'Sauvegarde automatique active • dernière sauvegarde : ' +
-    new Date(state.lastSavedAt).toLocaleString('fr-FR')
-  );
-}
 
   function updateCorrectionOptions() {
     if (!state.started || !state.roundSnapshots || state.roundSnapshots.length === 0) {
@@ -1503,7 +1831,7 @@ function updateAutosaveBanner() {
     }
 
     el.correctionBox.style.display = 'block';
-    el.roundCorrectionSelect.innerHTML = state.roundSnapshots.map(function (snap) {
+    el.roundCorrectionSelect.innerHTML = state.roundSnapshots.map(function(snap) {
       return '<option value="' + snap.round + '">Ronde ' + snap.round + '</option>';
     }).join('');
 
@@ -1514,395 +1842,24 @@ function updateAutosaveBanner() {
 
   function saveRoundSnapshot() {
     if (!state.started || !state.currentRound) return;
-
-    var snapshot = {
-      round: state.currentRound,
-      players: deepCopy(state.players),
-      pairings: deepCopy(state.pairings),
-      warnings: deepCopy(state.warnings),
-      totalRounds: state.totalRounds,
-      started: state.started,
-      activeTab: state.activeTab || 'classement'
-    };
-
-    state.roundSnapshots = state.roundSnapshots.filter(function (s) {
-      return s.round !== snapshot.round;
-    });
-
-    state.roundSnapshots.push(snapshot);
-    state.roundSnapshots.sort(function (a, b) { return a.round - b.round; });
+    saveCurrentRoundSnapshotWithPairings(state.pairings, state.warnings);
   }
 
-function saveToLocalStorage() {
-  if (suspendAutosave) return;
-  if (isAutosaveDisabled()) return;
-
-  try {
-    state.lastSavedAt = new Date().toISOString();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      state: state,
-      playersInput: el.playersInput.value,
-      topN: el.topNInput.value
-    }));
-    updateAutosaveBanner();
-  } catch (e) {
-    setAutosaveBanner('Impossible de sauvegarder automatiquement sur cet appareil.');
-  }
-}
-
-function loadFromLocalStorage() {
-  try {
-    var forceNewTournament = false;
-
+  function saveToLocalStorage() {
     try {
-      forceNewTournament = sessionStorage.getItem(FORCE_NEW_TOURNAMENT_KEY) === '1';
-    } catch (e) {}
-
-    if (forceNewTournament) {
-      try {
-        sessionStorage.removeItem(FORCE_NEW_TOURNAMENT_KEY);
-      } catch (e) {}
-
-state = {
-  players: [],
-  pairings: [],
-  started: false,
-  currentRound: 0,
-  totalRounds: 0,
-  warnings: [],
-  message: '',
-  lastSavedAt: null,
-  activeTab: 'classement',
-  roundSnapshots: [],
-  replayQueue: [],
-  correctionMode: 'auto',
-  pendingCorrectionContext: null
-};
-
-el.playersInput.value = INITIAL_PLAYERS_TEXT;
-el.topNInput.value = 8;
-
-setMessage('');
-setAutosaveBanner('Sauvegarde automatique active dans ce navigateur.');
-
-el.warnings.innerHTML = '';
-el.pairingsArea.className = 'empty';
-el.pairingsArea.textContent = 'Démarrez le tournoi pour générer la première ronde.';
-el.pairingsControls.style.display = 'none';
-el.infoGrid.style.display = 'none';
-
-activateTab('classement', false);
-updateStartButtonLabel();
-updateValidateRoundButton();
-drawChart();
-renderRanking();
-renderHistory();
-updateCorrectionOptions();
-
-return;
-
-      el.playersInput.value = INITIAL_PLAYERS_TEXT;
-      el.topNInput.value = 8;
-      setMessage('');
+      state.lastSavedAt = new Date().toISOString();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        state: state,
+        playersInput: el.playersInput.value,
+        topN: el.topNInput.value
+      }));
       updateAutosaveBanner();
-      return;
-    }
-
-    var raw = localStorage.getItem(STORAGE_KEY);
-
-    if (!raw) {
-      updateAutosaveBanner();
-      return;
-    }
-
-    var payload = JSON.parse(raw);
-
-    if (typeof payload.playersInput === 'string') el.playersInput.value = payload.playersInput;
-    if (payload.topN) el.topNInput.value = payload.topN;
-
-    if (payload.state) {
-      state = payload.state;
-      if (!state.roundSnapshots) state.roundSnapshots = [];
-      if (!state.replayQueue) state.replayQueue = [];
-      if (!state.correctionMode) state.correctionMode = 'auto';
-      if (!('pendingCorrectionContext' in state)) state.pendingCorrectionContext = null;
-    }
-
-    if (state.activeTab) activateTab(state.activeTab, false);
-    updateAutosaveBanner();
-
-    if (state.started || payload.playersInput) {
-      setMessage(
-        state.started
-          ? 'Tournoi restauré depuis la sauvegarde locale.'
-          : 'Liste restaurée depuis la sauvegarde locale.'
-      );
-    }
-  } catch (e) {
-    setAutosaveBanner('Sauvegarde locale détectée mais illisible.');
-  }
-}
-
-function clearSavedData() {
-  var ok = confirm('Effacer la sauvegarde locale sur cet appareil ?\n\nLe tournoi affiché reste inchangé, mais il ne sera plus restauré automatiquement tant que la sauvegarde automatique reste désactivée.');
-  if (!ok) return;
-
-  try {
-    localStorage.removeItem(STORAGE_KEY);
-  } catch (e) {}
-
-  setAutosaveDisabled(true);
-  state.lastSavedAt = null;
-
-  setMessage('La sauvegarde locale a été effacée. La sauvegarde automatique est maintenant désactivée sur cet appareil.');
-  updateAutosaveBanner();
-}
-
-function exportPDF() {
-  var sortedFinal = state.players.slice().sort(comparePlayers);
-  var exportDate = new Date().toLocaleString('fr-FR');
-  var currentRoundDisplay = state.currentRound || 0;
-  var totalRoundsDisplay = state.totalRounds || 0;
-
-  function buildRoundsHtml() {
-    var html = '';
-
-    if (state.roundSnapshots && state.roundSnapshots.length > 0) {
-      state.roundSnapshots.forEach(function (snap) {
-        html += '<section class="print-section">';
-        html += '<h2>Ronde ' + snap.round + '</h2>';
-
-        if (snap.pairings && snap.pairings.length > 0) {
-          html += '<table class="print-table">';
-          html += '<thead><tr><th>Table</th><th>Blanc</th><th>Noir</th><th>Résultat</th></tr></thead><tbody>';
-
-          snap.pairings.forEach(function (p) {
-            if (p.type === 'bye') {
-              html += '<tr>';
-              html += '<td>BYE</td>';
-              html += '<td colspan="2"><strong>' + escapeHtml(p.playerName) + '</strong></td>';
-              html += '<td>+1</td>';
-              html += '</tr>';
-            } else {
-              html += '<tr>';
-              html += '<td>' + p.table + '</td>';
-              html += '<td>' + escapeHtml(p.whiteName) + '</td>';
-              html += '<td>' + escapeHtml(p.blackName) + '</td>';
-              html += '<td>' + escapeHtml(formatResult(p.result || 'à jouer')) + '</td>';
-              html += '</tr>';
-            }
-          });
-
-          html += '</tbody></table>';
-        } else {
-          html += '<p class="muted">Aucun appariement enregistré pour cette ronde.</p>';
-        }
-
-        html += '</section>';
-      });
-    } else if (state.pairings && state.pairings.length > 0) {
-      html += '<section class="print-section">';
-      html += '<h2>Ronde ' + state.currentRound + '</h2>';
-      html += '<table class="print-table">';
-      html += '<thead><tr><th>Table</th><th>Blanc</th><th>Noir</th><th>Résultat</th></tr></thead><tbody>';
-
-      state.pairings.forEach(function (p) {
-        if (p.type === 'bye') {
-          html += '<tr>';
-          html += '<td>BYE</td>';
-          html += '<td colspan="2"><strong>' + escapeHtml(p.playerName) + '</strong></td>';
-          html += '<td>+1</td>';
-          html += '</tr>';
-        } else {
-          html += '<tr>';
-          html += '<td>' + p.table + '</td>';
-          html += '<td>' + escapeHtml(p.whiteName) + '</td>';
-          html += '<td>' + escapeHtml(p.blackName) + '</td>';
-          html += '<td>' + escapeHtml(formatResult(p.result || 'à jouer')) + '</td>';
-          html += '</tr>';
-        }
-      });
-
-      html += '</tbody></table>';
-      html += '</section>';
-    } else {
-      html += '<section class="print-section">';
-      html += '<h2>Rondes</h2>';
-      html += '<p class="muted">Aucune ronde disponible pour le moment.</p>';
-      html += '</section>';
-    }
-
-    return html;
-  }
-
-  function buildRankingHtml() {
-    var html = '<section class="print-section">';
-    html += '<h2>Classement</h2>';
-
-    if (!sortedFinal.length) {
-      html += '<p class="muted">Aucun classement disponible.</p>';
-      html += '</section>';
-      return html;
-    }
-
-    html += '<table class="print-table">';
-    html += '<thead><tr>';
-    html += '<th>#</th>';
-    html += '<th>Joueur</th>';
-    html += '<th>Score</th>';
-    html += '<th>Buchholz</th>';
-    html += '<th>Blancs</th>';
-    html += '<th>Noirs</th>';
-    html += '</tr></thead><tbody>';
-
-    sortedFinal.forEach(function (p, idx) {
-      var counts = colorCounts(p);
-      html += '<tr>';
-      html += '<td>' + (idx + 1) + '</td>';
-      html += '<td><strong>' + escapeHtml(p.name) + '</strong></td>';
-      html += '<td>' + formatScore(p.score) + '</td>';
-      html += '<td>' + Number(p.buchholz || 0).toFixed(1) + '</td>';
-      html += '<td>' + counts.w + '</td>';
-      html += '<td>' + counts.b + '</td>';
-      html += '</tr>';
-    });
-
-    html += '</tbody></table>';
-    html += '</section>';
-    return html;
-  }
-
-  function buildHistoryHtml() {
-    var html = '<section class="print-section">';
-    html += '<h2>Historique des joueurs</h2>';
-
-    if (!sortedFinal.length) {
-      html += '<p class="muted">Aucun historique disponible.</p>';
-      html += '</section>';
-      return html;
-    }
-
-    sortedFinal.forEach(function (p, idx) {
-      html += '<div class="player-history">';
-      html += '<div class="player-history-head">';
-      html += '<div class="player-rank">' + (idx + 1) + '</div>';
-      html += '<div>';
-      html += '<h3>' + escapeHtml(p.name) + '</h3>';
-      html += '<p>Score final : <strong>' + formatScore(p.score) + '</strong> • Buchholz : <strong>' + Number(p.buchholz || 0).toFixed(1) + '</strong></p>';
-      html += '</div>';
-      html += '</div>';
-
-      if (!p.resultsByRound || p.resultsByRound.length === 0) {
-        html += '<p class="muted">Aucune ronde jouée.</p>';
-      } else {
-        html += '<table class="print-table compact">';
-        html += '<thead><tr><th>Ronde</th><th>Couleur</th><th>Adversaire</th><th>Résultat</th><th>Points</th></tr></thead><tbody>';
-
-        p.resultsByRound.forEach(function (r) {
-          html += '<tr>';
-          html += '<td>' + r.round + '</td>';
-          html += '<td>' + escapeHtml(r.color || 'BYE') + '</td>';
-          html += '<td>' + (r.opponent ? escapeHtml(r.opponent) : '—') + '</td>';
-          html += '<td>' + escapeHtml(r.result) + '</td>';
-          html += '<td>' + formatScore(r.points) + '</td>';
-          html += '</tr>';
-        });
-
-        html += '</tbody></table>';
-      }
-
-      html += '</div>';
-    });
-
-    html += '</section>';
-    return html;
-  }
-
-  var content = '';
-  content += '<!DOCTYPE html>';
-  content += '<html lang="fr">';
-  content += '<head>';
-  content += '<meta charset="UTF-8">';
-  content += '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
-  content += '<title>Emental - Export tournoi</title>';
-  content += '<style>';
-  content += '@page { size: auto; margin: 14mm; }';
-  content += 'body { font-family: Arial, Helvetica, sans-serif; color: #0f172a; margin: 0; padding: 0; background: #fff; }';
-  content += '.page { max-width: 1100px; margin: 0 auto; }';
-  content += '.header { border-bottom: 2px solid #cbd5e1; padding-bottom: 14px; margin-bottom: 24px; }';
-  content += '.title { font-size: 28px; font-weight: 800; margin: 0 0 8px 0; }';
-  content += '.subtitle { margin: 0; color: #475569; font-size: 14px; line-height: 1.5; }';
-  content += '.meta-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 18px; }';
-  content += '.meta-card { border: 1px solid #dbe4f0; border-radius: 12px; padding: 12px 14px; background: #f8fafc; }';
-  content += '.meta-card .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: #64748b; margin-bottom: 6px; }';
-  content += '.meta-card .value { font-size: 18px; font-weight: 800; color: #0f172a; }';
-  content += '.print-section { margin-top: 28px; page-break-inside: avoid; }';
-  content += 'h2 { font-size: 20px; margin: 0 0 12px 0; padding-bottom: 6px; border-bottom: 1px solid #e2e8f0; }';
-  content += 'h3 { font-size: 16px; margin: 0 0 6px 0; }';
-  content += '.muted { color: #64748b; }';
-  content += '.print-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }';
-  content += '.print-table th, .print-table td { border: 1px solid #cbd5e1; padding: 8px 10px; text-align: left; vertical-align: top; }';
-  content += '.print-table th { background: #f8fafc; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: #334155; }';
-  content += '.print-table.compact { font-size: 12px; margin-top: 8px; }';
-  content += '.player-history { border: 1px solid #dbe4f0; border-radius: 14px; padding: 14px; margin-bottom: 16px; page-break-inside: avoid; }';
-  content += '.player-history-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }';
-  content += '.player-rank { width: 34px; height: 34px; border-radius: 999px; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: 800; }';
-  content += '.footer { margin-top: 28px; padding-top: 12px; border-top: 1px solid #e2e8f0; color: #64748b; font-size: 12px; }';
-  content += '@media print { .print-section { page-break-inside: avoid; } }';
-  content += '@media (max-width: 700px) { .meta-grid { grid-template-columns: 1fr 1fr; } .title { font-size: 22px; } }';
-  content += '</style>';
-  content += '</head>';
-  content += '<body>';
-  content += '<div class="page">';
-
-  content += '<div class="header">';
-  content += '<h1 class="title">♟️ Emental — Export complet du tournoi</h1>';
-  content += '<p class="subtitle">Document généré automatiquement depuis Emental. Export imprimable optimisé pour PDF.</p>';
-
-  content += '<div class="meta-grid">';
-  content += '<div class="meta-card"><div class="label">Date d’export</div><div class="value">' + escapeHtml(exportDate) + '</div></div>';
-  content += '<div class="meta-card"><div class="label">Joueurs</div><div class="value">' + sortedFinal.length + '</div></div>';
-  content += '<div class="meta-card"><div class="label">Ronde atteinte</div><div class="value">' + currentRoundDisplay + '</div></div>';
-  content += '<div class="meta-card"><div class="label">Rondes théoriques</div><div class="value">' + totalRoundsDisplay + '</div></div>';
-  content += '</div>';
-  content += '</div>';
-
-  content += buildRankingHtml();
-  content += buildRoundsHtml();
-  content += buildHistoryHtml();
-
-  content += '<div class="footer">';
-  content += 'Export généré par Emental • Développé par Erwan Perfetti • ' + escapeHtml(exportDate);
-  content += '</div>';
-
-  content += '</div>';
-  content += '</body>';
-  content += '</html>';
-
-  var win = window.open('', '', 'width=1100,height=900');
-  if (!win) {
-    setMessage('Impossible d’ouvrir la fenêtre d’export PDF. Vérifiez le bloqueur de pop-up.');
-    return;
-  }
-
-  win.document.open();
-  win.document.write(content);
-  win.document.close();
-  win.focus();
-
-  setTimeout(function () {
-    try {
-      win.print();
     } catch (e) {
-      setMessage('Impossible de lancer l’impression PDF sur cet appareil.');
+      setAutosaveBanner('Impossible de sauvegarder automatiquement sur cet appareil.');
     }
-  }, 300);
-}
+  }
 
-  function clearPlayers() {
-    if (!confirm('Effacer toute la liste des joueurs ?')) return;
-
-    el.playersInput.value = '';
+  function resetStateBase() {
     state = {
       players: [],
       pairings: [],
@@ -1911,35 +1868,311 @@ function exportPDF() {
       totalRounds: 0,
       warnings: [],
       message: '',
-      lastSavedAt: state.lastSavedAt || null,
-      activeTab: state.activeTab || 'classement',
+      lastSavedAt: null,
+      activeTab: 'classement',
       roundSnapshots: [],
       replayQueue: [],
       correctionMode: 'auto',
       pendingCorrectionContext: null
     };
+  }
 
+  function loadFromLocalStorage() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        updateAutosaveBanner();
+        return;
+      }
+
+      var payload = JSON.parse(raw);
+
+      if (typeof payload.playersInput === 'string') el.playersInput.value = payload.playersInput;
+      if (payload.topN) el.topNInput.value = payload.topN;
+
+      if (payload.state) {
+        state = payload.state;
+        if (!state.roundSnapshots) state.roundSnapshots = [];
+        if (!state.replayQueue) state.replayQueue = [];
+        if (!state.correctionMode) state.correctionMode = 'auto';
+        if (!('pendingCorrectionContext' in state)) state.pendingCorrectionContext = null;
+      }
+
+      if (state.activeTab) activateTab(state.activeTab, false);
+      updateAutosaveBanner();
+
+      if (state.started || payload.playersInput) {
+        setMessage(
+          state.started
+            ? 'Tournoi restauré depuis la sauvegarde locale.'
+            : 'Liste restaurée depuis la sauvegarde locale.'
+        );
+      }
+    } catch (e) {
+      setAutosaveBanner('Sauvegarde locale détectée mais illisible.');
+    }
+  }
+
+  function exportPDF() {
+    var sortedFinal = state.players.slice().sort(comparePlayers);
+    var exportDate = new Date().toLocaleString('fr-FR');
+    var currentRoundDisplay = state.currentRound || 0;
+    var totalRoundsDisplay = state.totalRounds || 0;
+
+    function buildRoundsHtml() {
+      var html = '';
+
+      if (state.roundSnapshots && state.roundSnapshots.length > 0) {
+        state.roundSnapshots.forEach(function(snap) {
+          html += '<section class="print-section">';
+          html += '<h2>Ronde ' + snap.round + '</h2>';
+
+          if (snap.pairings && snap.pairings.length > 0) {
+            html += '<table class="print-table">';
+            html += '<thead><tr><th>Table</th><th>Blanc</th><th>Elo</th><th>Noir</th><th>Elo</th><th>Résultat</th></tr></thead><tbody>';
+
+            snap.pairings.forEach(function(p) {
+              if (p.type === 'bye') {
+                html += '<tr>';
+                html += '<td>BYE</td>';
+                html += '<td colspan="2"><strong>' + escapeHtml(p.playerName) + '</strong></td>';
+                html += '<td colspan="2">—</td>';
+                html += '<td>+1 (non coté)</td>';
+                html += '</tr>';
+              } else {
+                html += '<tr>';
+                html += '<td>' + p.table + '</td>';
+                html += '<td>' + escapeHtml(p.whiteName) + '</td>';
+                html += '<td>' + escapeHtml(formatElo(p.whiteElo)) + '</td>';
+                html += '<td>' + escapeHtml(p.blackName) + '</td>';
+                html += '<td>' + escapeHtml(formatElo(p.blackElo)) + '</td>';
+                html += '<td>' + escapeHtml(formatResult(p.result || 'à jouer')) + '</td>';
+                html += '</tr>';
+              }
+            });
+
+            html += '</tbody></table>';
+          } else {
+            html += '<p class="muted">Aucun appariement enregistré pour cette ronde.</p>';
+          }
+
+          html += '</section>';
+        });
+      } else {
+        html += '<section class="print-section">';
+        html += '<h2>Rondes</h2>';
+        html += '<p class="muted">Aucune ronde disponible pour le moment.</p>';
+        html += '</section>';
+      }
+
+      return html;
+    }
+
+    function buildRankingHtml() {
+      var html = '<section class="print-section">';
+      html += '<h2>Classement</h2>';
+
+      if (!sortedFinal.length) {
+        html += '<p class="muted">Aucun classement disponible.</p>';
+        html += '</section>';
+        return html;
+      }
+
+      html += '<table class="print-table">';
+      html += '<thead><tr>';
+      html += '<th>#</th>';
+      html += '<th>TPN</th>';
+      html += '<th>Joueur</th>';
+      html += '<th>Elo initial</th>';
+      html += '<th>Elo final</th>';
+      html += '<th>Δ Elo</th>';
+      html += '<th>Score</th>';
+      html += '<th>Buchholz</th>';
+      html += '<th>Blancs</th>';
+      html += '<th>Noirs</th>';
+      html += '</tr></thead><tbody>';
+
+      sortedFinal.forEach(function(p, idx) {
+        var counts = colorCounts(p);
+        html += '<tr>';
+        html += '<td>' + (idx + 1) + '</td>';
+        html += '<td>' + p.seed + '</td>';
+        html += '<td><strong>' + escapeHtml(p.name) + '</strong></td>';
+        html += '<td>' + formatElo(p.eloInitial) + '</td>';
+        html += '<td>' + formatElo(p.eloCurrent) + '</td>';
+        html += '<td>' + formatDelta(p.eloDelta) + '</td>';
+        html += '<td>' + formatScore(p.score) + '</td>';
+        html += '<td>' + Number(p.buchholz || 0).toFixed(1) + '</td>';
+        html += '<td>' + counts.w + '</td>';
+        html += '<td>' + counts.b + '</td>';
+        html += '</tr>';
+      });
+
+      html += '</tbody></table>';
+      html += '</section>';
+      return html;
+    }
+
+    function buildHistoryHtml() {
+      var html = '<section class="print-section">';
+      html += '<h2>Historique des joueurs</h2>';
+
+      if (!sortedFinal.length) {
+        html += '<p class="muted">Aucun historique disponible.</p>';
+        html += '</section>';
+        return html;
+      }
+
+      sortedFinal.forEach(function(p, idx) {
+        html += '<div class="player-history">';
+        html += '<div class="player-history-head">';
+        html += '<div class="player-rank">' + (idx + 1) + '</div>';
+        html += '<div>';
+        html += '<h3>' + escapeHtml(p.name) + ' (TPN ' + p.seed + ')</h3>';
+        html += '<p>Score final : <strong>' + formatScore(p.score) + '</strong> • Buchholz : <strong>' + Number(p.buchholz || 0).toFixed(1) + '</strong> • Elo : <strong>' + formatElo(p.eloInitial) + ' → ' + formatElo(p.eloCurrent) + '</strong> (' + formatDelta(p.eloDelta) + ')</p>';
+        html += '</div>';
+        html += '</div>';
+
+        if (!p.resultsByRound || p.resultsByRound.length === 0) {
+          html += '<p class="muted">Aucune ronde jouée.</p>';
+        } else {
+          html += '<table class="print-table compact">';
+          html += '<thead><tr><th>Ronde</th><th>Couleur</th><th>Adversaire</th><th>Elo adv.</th><th>Résultat</th><th>Points</th><th>Δ Elo</th></tr></thead><tbody>';
+
+          p.resultsByRound.forEach(function(r) {
+            html += '<tr>';
+            html += '<td>' + r.round + '</td>';
+            html += '<td>' + escapeHtml(r.color || 'BYE') + '</td>';
+            html += '<td>' + (r.opponent ? escapeHtml(r.opponent) : '—') + '</td>';
+            html += '<td>' + (r.opponentElo != null ? formatElo(r.opponentElo) : '—') + '</td>';
+            html += '<td>' + escapeHtml(r.result) + '</td>';
+            html += '<td>' + formatScore(r.points) + '</td>';
+            html += '<td>' + formatDelta(r.ratingDelta || 0) + '</td>';
+            html += '</tr>';
+          });
+
+          html += '</tbody></table>';
+        }
+
+        html += '</div>';
+      });
+
+      html += '</section>';
+      return html;
+    }
+
+    var content = '';
+    content += '<!DOCTYPE html>';
+    content += '<html lang="fr">';
+    content += '<head>';
+    content += '<meta charset="UTF-8">';
+    content += '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
+    content += '<title>Emental - Export tournoi</title>';
+    content += '<style>';
+    content += '@page { size: auto; margin: 14mm; }';
+    content += 'body { font-family: Arial, Helvetica, sans-serif; color: #0f172a; margin: 0; padding: 0; background: #fff; }';
+    content += '.page { max-width: 1100px; margin: 0 auto; }';
+    content += '.header { border-bottom: 2px solid #cbd5e1; padding-bottom: 14px; margin-bottom: 24px; }';
+    content += '.title { font-size: 28px; font-weight: 800; margin: 0 0 8px 0; }';
+    content += '.subtitle { margin: 0; color: #475569; font-size: 14px; line-height: 1.5; }';
+    content += '.meta-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 18px; }';
+    content += '.meta-card { border: 1px solid #dbe4f0; border-radius: 12px; padding: 12px 14px; background: #f8fafc; }';
+    content += '.meta-card .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: #64748b; margin-bottom: 6px; }';
+    content += '.meta-card .value { font-size: 18px; font-weight: 800; color: #0f172a; }';
+    content += '.print-section { margin-top: 28px; page-break-inside: avoid; }';
+    content += 'h2 { font-size: 20px; margin: 0 0 12px 0; padding-bottom: 6px; border-bottom: 1px solid #e2e8f0; }';
+    content += 'h3 { font-size: 16px; margin: 0 0 6px 0; }';
+    content += '.muted { color: #64748b; }';
+    content += '.print-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }';
+    content += '.print-table th, .print-table td { border: 1px solid #cbd5e1; padding: 8px 10px; text-align: left; vertical-align: top; }';
+    content += '.print-table th { background: #f8fafc; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: #334155; }';
+    content += '.print-table.compact { font-size: 12px; margin-top: 8px; }';
+    content += '.player-history { border: 1px solid #dbe4f0; border-radius: 14px; padding: 14px; margin-bottom: 16px; page-break-inside: avoid; }';
+    content += '.player-history-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }';
+    content += '.player-rank { width: 34px; height: 34px; border-radius: 999px; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: 800; }';
+    content += '.footer { margin-top: 28px; padding-top: 12px; border-top: 1px solid #e2e8f0; color: #64748b; font-size: 12px; }';
+    content += '@media print { .print-section { page-break-inside: avoid; } }';
+    content += '@media (max-width: 700px) { .meta-grid { grid-template-columns: 1fr 1fr; } .title { font-size: 22px; } }';
+    content += '</style>';
+    content += '</head>';
+    content += '<body>';
+    content += '<div class="page">';
+
+    content += '<div class="header">';
+    content += '<h1 class="title">♟️ Emental — Export complet du tournoi</h1>';
+    content += '<p class="subtitle">Document généré automatiquement depuis Emental. Export imprimable optimisé pour PDF.</p>';
+
+    content += '<div class="meta-grid">';
+    content += '<div class="meta-card"><div class="label">Date d’export</div><div class="value">' + escapeHtml(exportDate) + '</div></div>';
+    content += '<div class="meta-card"><div class="label">Joueurs</div><div class="value">' + sortedFinal.length + '</div></div>';
+    content += '<div class="meta-card"><div class="label">Ronde atteinte</div><div class="value">' + currentRoundDisplay + '</div></div>';
+    content += '<div class="meta-card"><div class="label">Rondes théoriques</div><div class="value">' + totalRoundsDisplay + '</div></div>';
+    content += '<div class="meta-card"><div class="label">Mode Elo</div><div class="value">FIDE-style</div></div>';
+    content += '</div>';
+    content += '</div>';
+
+    content += buildRankingHtml();
+    content += buildRoundsHtml();
+    content += buildHistoryHtml();
+
+    content += '<div class="footer">';
+    content += 'Export généré par Emental • Développé par Erwan Perfetti • ' + escapeHtml(exportDate);
+    content += '</div>';
+
+    content += '</div>';
+    content += '</body>';
+    content += '</html>';
+
+    var win = window.open('', '', 'width=1100,height=900');
+    if (!win) {
+      setMessage('Impossible d’ouvrir la fenêtre d’export PDF. Vérifiez le bloqueur de pop-up.');
+      return;
+    }
+
+    win.document.open();
+    win.document.write(content);
+    win.document.close();
+    win.focus();
+
+    setTimeout(function() {
+      try {
+        win.print();
+      } catch (e) {
+        setMessage('Impossible de lancer l’impression PDF sur cet appareil.');
+      }
+    }, 300);
+  }
+
+  function clearPlayers() {
+    if (!confirm('Effacer toute la liste des joueurs ?')) return;
+
+    var keepLastSavedAt = state.lastSavedAt || null;
+    resetStateBase();
+    state.lastSavedAt = keepLastSavedAt;
+
+    el.playersInput.value = '';
     setMessage('Liste des joueurs effacée.');
     saveToLocalStorage();
     renderAll();
   }
 
-function newTournament() {
-  var ok = confirm('Démarrer un nouveau tournoi ?\n\nTous les résultats, rondes et sauvegardes locales seront supprimés.');
-  if (!ok) return;
+  function newTournament() {
+    var ok = confirm('Démarrer un nouveau tournoi ?\n\nTous les résultats, rondes et sauvegardes locales seront supprimés et la liste initiale sera restaurée.');
+    if (!ok) return;
 
-  suspendAutosave = true;
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch (e) {}
 
-  try {
-    localStorage.removeItem(STORAGE_KEY);
-  } catch (e) {}
+    resetStateBase();
+    el.playersInput.value = INITIAL_PLAYERS_TEXT;
+    el.topNInput.value = 8;
 
-  try {
-    sessionStorage.setItem(FORCE_NEW_TOURNAMENT_KEY, '1');
-  } catch (e) {}
-
-  location.reload();
-}
+    setMessage('Nouveau tournoi prêt. La liste initiale a été restaurée.');
+    applyInitialVisualState();
+    saveToLocalStorage();
+    renderAll();
+  }
 
   function updateInfoCards() {
     if (!state.started) {
@@ -1956,6 +2189,7 @@ function newTournament() {
 
     el.roundStat.textContent = Math.min(state.currentRound, state.totalRounds) + ' / ' + state.totalRounds;
     el.projectionStat.textContent = '≈ ' + leadersStillPossible + ' joueur(x) encore potentiellement invaincu(s) • ' + state.players.length + ' inscrit(s)';
+    el.eloModeStat.textContent = 'FIDE-style • K = ' + DEFAULT_K_FACTOR;
   }
 
   function renderWarnings() {
@@ -1964,14 +2198,14 @@ function newTournament() {
       return;
     }
 
-    el.warnings.innerHTML = state.warnings.map(function (w) {
+    el.warnings.innerHTML = state.warnings.map(function(w) {
       return '<div class="warning">' + escapeHtml(w) + '</div>';
     }).join('');
   }
 
   function mobileResultButtons(selectedValue, idx) {
     return '<div class="result-buttons">' +
-      SCORE_OPTIONS.map(function (opt) {
+      SCORE_OPTIONS.map(function(opt) {
         return '<button type="button" class="result-btn' +
           (selectedValue === opt.value ? ' active' : '') +
           '" data-pairing-btn="' + idx +
@@ -1997,34 +2231,58 @@ function newTournament() {
       return;
     }
 
-    var sortedPairings = state.pairings.slice().sort(function (a, b) {
-      if (a.type === 'bye' && b.type !== 'bye') return 1;
-      if (a.type !== 'bye' && b.type === 'bye') return -1;
-      return (a.table || 999) - (b.table || 999);
-    });
+    var sortedPairings = state.pairings
+      .map(function(pairing, originalIndex) {
+        return { pairing: pairing, originalIndex: originalIndex };
+      })
+      .sort(function(a, b) {
+        if (a.pairing.type === 'bye' && b.pairing.type !== 'bye') return 1;
+        if (a.pairing.type !== 'bye' && b.pairing.type === 'bye') return -1;
+        return (a.pairing.table || 999) - (b.pairing.table || 999);
+      });
 
     var html = '';
 
-    sortedPairings.forEach(function (pairing, idx) {
+    sortedPairings.forEach(function(item) {
+      var pairing = item.pairing;
+      var idx = item.originalIndex;
+
       if (pairing.type === 'bye') {
         html += '<div class="pairing bye">' +
           '<span class="badge">BYE</span>' +
-          '<div class="player-name">' + escapeHtml(pairing.playerName) + '</div>' +
+          '<div>' +
+            '<div class="player-name">' + escapeHtml(pairing.playerName) + ' (' + formatElo(pairing.playerElo) + ')</div>' +
+            '<div class="player-sub">Le bye vaut +1 point mais 0 Elo.</div>' +
+          '</div>' +
           '<div style="font-weight:700; color:#15803d;">+1 point</div>' +
           '</div>';
       } else {
-        var meta = 'Groupe de score ' + escapeHtml(String(pairing.scoreGroup)) + (pairing.scoreGap > 0 ? ' • flottement ' + pairing.scoreGap : '');
+        var expectedWhite = expectedScore(pairing.whiteElo, pairing.blackElo);
+        var expectedBlack = expectedScore(pairing.blackElo, pairing.whiteElo);
+        var meta =
+          'Groupe de score ' + escapeHtml(String(pairing.scoreGroup)) +
+          (pairing.scoreGap > 0 ? ' • flottement ' + pairing.scoreGap : '') + '\n' +
+          'Elo : ' + formatElo(pairing.whiteElo) + ' vs ' + formatElo(pairing.blackElo) +
+          ' • Espérance : ' + expectedWhite.toFixed(2).replace('.', ',') + ' / ' + expectedBlack.toFixed(2).replace('.', ',');
 
         html += '<div class="pairing">' +
           '<span class="badge">Table ' + pairing.table + '</span>' +
-          '<div class="player-box white"><div class="player-role">Blanc</div><div class="player-name">' + escapeHtml(pairing.whiteName) + '</div></div>' +
+          '<div class="player-box white">' +
+            '<div class="player-role">Blanc</div>' +
+            '<div class="player-name">' + escapeHtml(pairing.whiteName) + ' (' + formatElo(pairing.whiteElo) + ')</div>' +
+            '<div class="player-sub">TPN ' + state.players.find(function(p){ return p.id === pairing.whiteId; }).seed + '</div>' +
+          '</div>' +
           '<div class="arrow">→</div>' +
-          '<div class="player-box black"><div class="player-role">Noir</div><div class="player-name">' + escapeHtml(pairing.blackName) + '</div></div>' +
+          '<div class="player-box black">' +
+            '<div class="player-role">Noir</div>' +
+            '<div class="player-name">' + escapeHtml(pairing.blackName) + ' (' + formatElo(pairing.blackElo) + ')</div>' +
+            '<div class="player-sub">TPN ' + state.players.find(function(p){ return p.id === pairing.blackId; }).seed + '</div>' +
+          '</div>' +
           '<div>' +
             '<div class="pair-meta">' + meta + '</div>' +
             '<select data-pairing-index="' + idx + '" class="pairing-select">' +
               '<option value="">Résultat…</option>' +
-              SCORE_OPTIONS.map(function (opt) {
+              SCORE_OPTIONS.map(function(opt) {
                 return '<option value="' + opt.value + '"' + (pairing.result === opt.value ? ' selected' : '') + '>' + opt.label + '</option>';
               }).join('') +
             '</select>' +
@@ -2037,8 +2295,8 @@ function newTournament() {
     el.pairingsArea.className = 'pairings-list';
     el.pairingsArea.innerHTML = html;
 
-    Array.prototype.slice.call(el.pairingsArea.querySelectorAll('.pairing-select')).forEach(function (select) {
-      select.addEventListener('change', function (e) {
+    Array.prototype.slice.call(el.pairingsArea.querySelectorAll('.pairing-select')).forEach(function(select) {
+      select.addEventListener('change', function(e) {
         var idx = Number(e.target.dataset.pairingIndex);
         state.pairings[idx].result = e.target.value;
         saveRoundSnapshot();
@@ -2047,8 +2305,8 @@ function newTournament() {
       });
     });
 
-    Array.prototype.slice.call(el.pairingsArea.querySelectorAll('.result-btn')).forEach(function (btn) {
-      btn.addEventListener('click', function (e) {
+    Array.prototype.slice.call(el.pairingsArea.querySelectorAll('.result-btn')).forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
         var idx = Number(e.currentTarget.dataset.pairingBtn);
         var value = e.currentTarget.dataset.result;
         state.pairings[idx].result = value;
@@ -2063,21 +2321,25 @@ function newTournament() {
 
   function renderRanking() {
     if (!state.players.length) {
-      el.rankingTableBody.innerHTML = '<tr><td colspan="7" style="color:#64748b;">Aucun joueur pour le moment.</td></tr>';
+      el.rankingTableBody.innerHTML = '<tr><td colspan="11" style="color:#64748b;">Aucun joueur pour le moment.</td></tr>';
       return;
     }
 
-    el.rankingTableBody.innerHTML = state.players.slice().sort(comparePlayers).map(function (p, idx) {
+    el.rankingTableBody.innerHTML = state.players.slice().sort(comparePlayers).map(function(p, idx) {
       var counts = colorCounts(p);
       var recent = p.colors.length === 0
         ? '<span style="color:#94a3b8;">—</span>'
-        : '<div class="color-badges">' + p.colors.slice(-5).map(function (c) {
+        : '<div class="color-badges">' + p.colors.slice(-5).map(function(c) {
             return '<span class="mini-badge ' + (c === 'W' ? 'white' : 'black') + '">' + c + '</span>';
           }).join('') + '</div>';
 
       return '<tr>' +
         '<td>' + (idx + 1) + '</td>' +
+        '<td>' + p.seed + '</td>' +
         '<td><strong>' + escapeHtml(p.name) + '</strong></td>' +
+        '<td>' + formatElo(p.eloInitial) + '</td>' +
+        '<td>' + formatElo(p.eloCurrent) + '</td>' +
+        '<td><span class="mini-badge ' + deltaBadgeClass(p.eloDelta) + '">' + formatDelta(p.eloDelta) + '</span></td>' +
         '<td>' + formatScore(p.score) + '</td>' +
         '<td>' + Number(p.buchholz || 0).toFixed(1) + '</td>' +
         '<td>' + counts.w + '</td>' +
@@ -2089,29 +2351,30 @@ function newTournament() {
 
   function renderHistory() {
     if (!state.players.length) {
-      el.historyGrid.innerHTML = "<div class=\"empty\" style=\"grid-column:1/-1;\">L'historique apparaîtra après le démarrage du tournoi.</div>";
+      el.historyGrid.innerHTML = '<div class="empty" style="grid-column:1/-1;">L’historique apparaîtra après le démarrage du tournoi.</div>';
       return;
     }
 
-    el.historyGrid.innerHTML = state.players.slice().sort(comparePlayers).map(function (p, idx) {
+    el.historyGrid.innerHTML = state.players.slice().sort(comparePlayers).map(function(p, idx) {
       var items = p.resultsByRound.length === 0
         ? '<div class="round-item" style="color:#64748b;">Aucune ronde jouée.</div>'
-        : p.resultsByRound.map(function (r) {
+        : p.resultsByRound.map(function(r) {
+            var deltaClass = deltaBadgeClass(r.ratingDelta || 0);
             return '<div class="round-item">' +
               '<div class="round-head">' +
                 '<span>Ronde ' + r.round + '</span>' +
                 '<span class="mini-badge ' + (r.color === 'W' ? 'white' : r.color === 'B' ? 'black' : 'bye') + '">' + (r.color || 'BYE') + '</span>' +
               '</div>' +
-              '<div>Adversaire : ' + (r.opponent ? escapeHtml(r.opponent) : '—') + '</div>' +
-              '<div>Résultat : ' + escapeHtml(r.result) + '</div>' +
-              '<div>Points : ' + formatScore(r.points) + '</div>' +
+              '<div>Adversaire : ' + (r.opponent ? escapeHtml(r.opponent) : '—') + (r.opponentElo != null ? ' (' + formatElo(r.opponentElo) + ')' : '') + '</div>' +
+              '<div>Résultat : ' + escapeHtml(r.result) + ' • Points : ' + formatScore(r.points) + '</div>' +
+              '<div>Espérance : ' + (r.expectedScore == null ? '—' : r.expectedScore.toFixed(2).replace('.', ',')) + ' • Δ Elo : <span class="mini-badge ' + deltaClass + '">' + formatDelta(r.ratingDelta || 0) + '</span></div>' +
             '</div>';
           }).join('');
 
       return '<div class="history-card">' +
         '<div class="history-head">' +
-          '<h3 class="history-title">' + (idx + 1) + '. ' + escapeHtml(p.name) + '</h3>' +
-          '<p class="history-subtitle">Score ' + formatScore(p.score) + ' • Buchholz ' + Number(p.buchholz || 0).toFixed(1) + '</p>' +
+          '<h3 class="history-title">' + (idx + 1) + '. ' + escapeHtml(p.name) + ' (TPN ' + p.seed + ')</h3>' +
+          '<p class="history-subtitle">Score ' + formatScore(p.score) + ' • Buchholz ' + Number(p.buchholz || 0).toFixed(1) + ' • Elo ' + formatElo(p.eloInitial) + ' → ' + formatElo(p.eloCurrent) + ' (' + formatDelta(p.eloDelta) + ')</p>' +
         '</div>' +
         '<div>' + items + '</div>' +
       '</div>';
@@ -2140,7 +2403,7 @@ function newTournament() {
     var topN = Math.max(1, Number(el.topNInput.value || 8));
     var selectedPlayers = getTopPlayersForChart(state.players, topN);
     var rounds = chartRounds(state.currentRound);
-    var maxScore = Math.max.apply(null, [1].concat(selectedPlayers.map(function (p) {
+    var maxScore = Math.max.apply(null, [1].concat(selectedPlayers.map(function(p) {
       return Math.max.apply(null, p.scoreHistory);
     })));
 
@@ -2177,7 +2440,7 @@ function newTournament() {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
 
-    rounds.forEach(function (r) {
+    rounds.forEach(function(r) {
       var x = xScale(r);
       ctx.beginPath();
       ctx.moveTo(x, padding.top);
@@ -2205,13 +2468,13 @@ function newTournament() {
     ctx.fillText('Score', 0, 0);
     ctx.restore();
 
-    selectedPlayers.forEach(function (player, idx) {
+    selectedPlayers.forEach(function(player, idx) {
       var color = palette[idx % palette.length];
       ctx.strokeStyle = color;
       ctx.lineWidth = 3;
       ctx.beginPath();
 
-      player.scoreHistory.forEach(function (score, rIdx) {
+      player.scoreHistory.forEach(function(score, rIdx) {
         var x = xScale(rIdx);
         var y = yScale(score);
         if (rIdx === 0) ctx.moveTo(x, y);
@@ -2221,7 +2484,7 @@ function newTournament() {
       ctx.stroke();
 
       ctx.fillStyle = color;
-      player.scoreHistory.forEach(function (score, rIdx) {
+      player.scoreHistory.forEach(function(score, rIdx) {
         var x = xScale(rIdx);
         var y = yScale(score);
         ctx.beginPath();
@@ -2230,7 +2493,7 @@ function newTournament() {
       });
     });
 
-    el.chartLegend.innerHTML = selectedPlayers.map(function (p, idx) {
+    el.chartLegend.innerHTML = selectedPlayers.map(function(p, idx) {
       return '<span class="legend-item">' +
         '<span class="legend-color" style="background:' + palette[idx % palette.length] + '"></span>' +
         escapeHtml(p.name) +
@@ -2252,7 +2515,14 @@ function newTournament() {
   }
 
   function startTournament() {
-    var parsed = parsePlayers(el.playersInput.value);
+    var parsed;
+    try {
+      parsed = parsePlayers(el.playersInput.value);
+    } catch (err) {
+      setMessage('Erreur de parsing :\n' + err.message);
+      updateStartButtonLabel();
+      return;
+    }
 
     if (parsed.length < 4) {
       setMessage('Veuillez inscrire au moins 4 joueurs.');
@@ -2260,7 +2530,7 @@ function newTournament() {
       return;
     }
 
-    var initial = computeBuchholz(parsed).sort(comparePlayers);
+    var initial = computeBuchholz(parsed).sort(comparePlayersInitial);
     var rounds = ceilLog2(initial.length);
     var built = buildSwissPairings(initial, 1);
 
@@ -2276,66 +2546,55 @@ function newTournament() {
     state.correctionMode = 'auto';
 
     saveRoundSnapshot();
-    setMessage('Tournoi initialisé.');
+    setMessage('Tournoi initialisé.\nOrdre initial (TPN) attribué selon l’Elo décroissant.');
     saveToLocalStorage();
     renderAll();
   }
 
-function resetTournament() {
-  var ok = confirm('Réinitialiser le tournoi en conservant la liste actuelle des joueurs ?\n\nLes rondes, résultats, historiques et corrections seront supprimés.');
-  if (!ok) return;
+  function resetTournament() {
+    var ok = confirm('Réinitialiser le tournoi en conservant la liste actuelle des joueurs ?\n\nLes rondes, résultats, Elo recalculés, historiques et corrections seront supprimés.');
+    if (!ok) return;
 
-  var currentPlayers = getCurrentPlayersText();
+    var currentPlayers = getCurrentPlayersText();
+    var keepLastSavedAt = state.lastSavedAt || null;
 
-  state = {
-    players: [],
-    pairings: [],
-    started: false,
-    currentRound: 0,
-    totalRounds: 0,
-    warnings: [],
-    message: '',
-    lastSavedAt: state.lastSavedAt || null,
-    activeTab: 'classement',
-    roundSnapshots: [],
-    replayQueue: [],
-    correctionMode: 'auto',
-    pendingCorrectionContext: null
-  };
+    resetStateBase();
+    state.lastSavedAt = keepLastSavedAt;
 
-  el.playersInput.value = currentPlayers;
-  el.topNInput.value = 8;
+    el.playersInput.value = currentPlayers;
+    el.topNInput.value = 8;
 
-  setMessage('Tournoi réinitialisé. La liste des joueurs est conservée.');
-  setAutosaveBanner(state.lastSavedAt
-    ? 'Sauvegarde automatique active • dernière sauvegarde : ' + new Date(state.lastSavedAt).toLocaleString('fr-FR')
-    : 'Sauvegarde automatique active dans ce navigateur.'
-  );
-
-applyInitialVisualState();
-
-  saveToLocalStorage();
-}
+    setMessage('Tournoi réinitialisé. La liste des joueurs est conservée.');
+    applyInitialVisualState();
+    saveToLocalStorage();
+    renderAll();
+  }
 
   function shuffleInitialOrder() {
-    var raw = parsePlayers(el.playersInput.value);
+    var parsed;
+    try {
+      parsed = parsePlayers(el.playersInput.value);
+    } catch (err) {
+      setMessage('Erreur de parsing :\n' + err.message);
+      return;
+    }
 
-    var shuffled = raw.slice().sort(function () {
-      return Math.random() - 0.5;
-    }).map(function (p, i) {
-      var cp = deepCopy(p);
-      cp.seed = i + 1;
-      return cp;
+    var lines = parsed.map(function(p) {
+      return p.name + ' ' + formatElo(p.eloInitial);
     });
 
-    el.playersInput.value = shuffled.map(function (p) { return p.name; }).join('\n');
-    setMessage('Ordre initial mélangé.');
+    var shuffled = lines.slice().sort(function() {
+      return Math.random() - 0.5;
+    });
+
+    el.playersInput.value = shuffled.join('\n');
+    setMessage('Ordre de saisie mélangé. Le TPN final sera de toute façon recalculé sur l’Elo au démarrage.');
     saveToLocalStorage();
     updateStartButtonLabel();
   }
 
   function validateRound() {
-    var ok = state.pairings.every(function (p) {
+    var ok = state.pairings.every(function(p) {
       return p.type === 'bye' || !!p.result;
     });
 
@@ -2348,9 +2607,9 @@ applyInitialVisualState();
   }
 
   function showValidationPopup() {
-    var lines = state.pairings.map(function (p) {
-      if (p.type === 'bye') return 'BYE : ' + p.playerName + ' (+1)';
-      return 'Table ' + p.table + ' : ' + p.whiteName + ' ' + formatResult(p.result) + ' ' + p.blackName;
+    var lines = state.pairings.map(function(p) {
+      if (p.type === 'bye') return 'BYE : ' + p.playerName + ' (+1, 0 Elo)';
+      return 'Table ' + p.table + ' : ' + p.whiteName + ' (' + formatElo(p.whiteElo) + ') ' + formatResult(p.result) + ' ' + p.blackName + ' (' + formatElo(p.blackElo) + ')';
     }).join('\n');
 
     document.getElementById('roundSummary').textContent =
@@ -2363,7 +2622,7 @@ applyInitialVisualState();
   function runQA() {
     var warnings = [];
 
-    state.pairings.forEach(function (p) {
+    state.pairings.forEach(function(p) {
       if (p.type !== 'bye' && !p.result) {
         warnings.push('Résultat manquant table ' + p.table);
       }
@@ -2374,8 +2633,8 @@ applyInitialVisualState();
     if (warnings.length === 0) {
       box.innerHTML = "<div class='good'>✔ Aucun problème détecté</div>";
     } else {
-      box.innerHTML = warnings.map(function (w) {
-        return "<div class='bad'>⚠ " + w + "</div>";
+      box.innerHTML = warnings.map(function(w) {
+        return "<div class='bad'>⚠ " + escapeHtml(w) + "</div>";
       }).join('');
     }
   }
@@ -2390,7 +2649,7 @@ applyInitialVisualState();
   }
 
   function actuallyValidateRound() {
-    var allResultsEntered = state.pairings.every(function (p) {
+    var allResultsEntered = state.pairings.every(function(p) {
       return p.type === 'bye' || !!p.result;
     });
 
@@ -2409,7 +2668,7 @@ applyInitialVisualState();
       state.warnings = [];
       state.replayQueue = [];
       state.pendingCorrectionContext = null;
-      setMessage('Tournoi terminé. Le classement final est disponible ci-dessous.');
+      setMessage('Tournoi terminé. Le classement final et les Elo finaux sont disponibles ci-dessous.');
       saveToLocalStorage();
       renderAll();
       return;
@@ -2496,8 +2755,8 @@ applyInitialVisualState();
     }
 
     var preservedFuture = state.roundSnapshots
-      .filter(function (s) { return s.round > round; })
-      .map(function (s) {
+      .filter(function(s) { return s.round > round; })
+      .map(function(s) {
         return { round: s.round, pairings: deepCopy(s.pairings) };
       });
 
@@ -2507,7 +2766,7 @@ applyInitialVisualState();
     state.started = true;
     state.currentRound = snap.round;
     state.totalRounds = snap.totalRounds;
-    state.roundSnapshots = state.roundSnapshots.filter(function (s) { return s.round <= round; });
+    state.roundSnapshots = state.roundSnapshots.filter(function(s) { return s.round <= round; });
     state.replayQueue = preservedFuture;
     state.pendingCorrectionContext = null;
     state.correctionMode = el.correctionModeSelect ? el.correctionModeSelect.value : 'auto';
@@ -2531,11 +2790,11 @@ applyInitialVisualState();
 
     state.activeTab = target;
 
-    el.tabs.forEach(function (b) {
+    el.tabs.forEach(function(b) {
       b.classList.toggle('active', b.getAttribute('data-tab') === target);
     });
 
-    el.panels.forEach(function (panel) {
+    el.panels.forEach(function(panel) {
       panel.classList.toggle('active', panel.id === 'tab-' + target);
     });
 
@@ -2544,12 +2803,12 @@ applyInitialVisualState();
   }
 
   function attachNonInlineEvents() {
-    el.topNInput.addEventListener('input', function () {
+    el.topNInput.addEventListener('input', function() {
       drawChart();
       saveToLocalStorage();
     });
 
-    el.playersInput.addEventListener('input', function () {
+    el.playersInput.addEventListener('input', function() {
       saveToLocalStorage();
       updateStartButtonLabel();
     });
@@ -2557,53 +2816,27 @@ applyInitialVisualState();
     window.addEventListener('resize', drawChart);
     window.addEventListener('beforeunload', saveToLocalStorage);
 
-    window.addEventListener('click', function (e) {
+    window.addEventListener('click', function(e) {
       if (e.target && e.target.id === 'validationModal') closeValidationPopup();
       if (e.target && e.target.id === 'correctionImpactModal') closeCorrectionImpactModal();
     });
   }
 
-function applyInitialVisualState() {
-  el.warnings.innerHTML = '';
-  el.pairingsArea.className = 'empty';
-  el.pairingsArea.textContent = 'Démarrez le tournoi pour générer la première ronde.';
-  el.pairingsControls.style.display = 'none';
-  el.infoGrid.style.display = 'none';
+  function applyInitialVisualState() {
+    el.warnings.innerHTML = '';
+    el.pairingsArea.className = 'empty';
+    el.pairingsArea.textContent = 'Démarrez le tournoi pour générer la première ronde.';
+    el.pairingsControls.style.display = 'none';
+    el.infoGrid.style.display = 'none';
 
-  activateTab('classement', false);
-  updateStartButtonLabel();
-  updateValidateRoundButton();
-  drawChart();
-  renderRanking();
-  renderHistory();
-  updateCorrectionOptions();
-}
-
-function isAutosaveDisabled() {
-  try {
-    return localStorage.getItem(AUTOSAVE_DISABLED_KEY) === '1';
-  } catch (e) {
-    return false;
+    activateTab('classement', false);
+    updateStartButtonLabel();
+    updateValidateRoundButton();
+    drawChart();
+    renderRanking();
+    renderHistory();
+    updateCorrectionOptions();
   }
-}
-
-function setAutosaveDisabled(flag) {
-  try {
-    if (flag) {
-      localStorage.setItem(AUTOSAVE_DISABLED_KEY, '1');
-    } else {
-      localStorage.removeItem(AUTOSAVE_DISABLED_KEY);
-    }
-  } catch (e) {}
-}
-
-function enableAutosave() {
-  setAutosaveDisabled(false);
-  saveToLocalStorage();
-  setMessage('La sauvegarde automatique a été réactivée sur cet appareil.');
-  updateAutosaveBanner();
-}
-
 
   (function initApp() {
     wireDomRefs();
